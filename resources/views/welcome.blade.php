@@ -7,6 +7,8 @@
     <title>coucou</title>
 </head>
 <body>
+    @include('header')
+    
     <h1>Coucou</h1>
 </body>
 </html>

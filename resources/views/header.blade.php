@@ -7,18 +7,17 @@
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="">Calendrier</a></li>
-                <li><a href="">Tâches</a></li>
-                <li><a href="">Reunions</a></li>
-            </ul>
+        <nav class="nav">
+            <ul><a href="">Calendrier</a></ul>
+            <ul><a href="">Tâches</a></ul>
+            <ul><a href="/reunion">Reunions</a></ul>
         </nav>
         <a href="#" onclick="location.reload(); return false;">
-            <img src="../img/logo_oolong.png" alt="Logo">
+            <img class="logo" src="../img/logo_oolong.png" alt="Logo">
         </a>
 
         <button class="bouton-connexion">Connexion</button>
+
         <form action="/recherche" method="get">
             <input class="search-box" type="text" placeholder="Rechercher...">
             <button class="search-button">🔍</button>

@@ -21,3 +21,29 @@
     background-color: #007BFF;
     color: white;
 }
+
+header {
+    display: flex;
+    background-size: cover;
+    justify-content: space-around;
+
+}
+
+.logo {
+    height: 150px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.nav {
+    height: 80px;
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+

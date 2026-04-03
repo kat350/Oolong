@@ -9,3 +9,7 @@ Route::get('/', function () {
 Route::get('/header', function(){
     return view('header');
 })->name('header');
+
+Route::get('/reunion', function(){
+    return view('reunion');
+})->name('reunion');

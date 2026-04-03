@@ -18,7 +18,7 @@
     padding: 10px 15px;
     border-radius: 20px;
     border: none;
-    background-color: #007BFF;
+    background-color: rgb(242, 228, 203);
     color: white;
 }
 
@@ -26,6 +26,8 @@ header {
     display: flex;
     background-size: cover;
     justify-content: space-around;
+    align-items: center;
+    background-color: rgba(255, 245, 227, 1);
 
 }
 
@@ -40,10 +42,22 @@ header {
 
 .nav {
     height: 80px;
-    width: 300px;
+    width: 400px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-
+    font-size: 30px;
+    background-color: rgb(242, 228, 203);
+    border-radius: 20px;
+    font-family: "Indie Flower", cursive;
+    font-weight: 400;
+    font-style: normal;
+    
+    
 }
 
+nav a {
+    text-decoration: none;
+    color: rgba(108, 60, 16, 1);
+
+}

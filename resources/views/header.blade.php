@@ -9,7 +9,7 @@
     <header>
         <nav class="nav">
             <ul><a href="">Calendrier</a></ul>
-            <ul><a href="">Tâches</a></ul>
+            <ul><a href="/taches">Tâches</a></ul>
             <ul><a href="/reunion">Reunions</a></ul>
         </nav>
         <a href="#" onclick="location.reload(); return false;">

@@ -13,3 +13,7 @@ Route::get('/header', function(){
 Route::get('/reunion', function(){
     return view('reunion');
 })->name('reunion');
+
+Route::get('/taches', function(){
+    return view('taches');
+})->name('taches');

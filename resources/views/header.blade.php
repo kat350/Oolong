@@ -15,16 +15,18 @@
             <ul><a href="/taches">Tâches</a></ul>
             <ul><a href="/reunion">Reunions</a></ul>
         </nav>
-        <a href="#" onclick="location.reload(); return false;">
+        <a href="welcome.blade.php" onclick="location.reload(); return false;">
             <img class="logo" src="../img/logo_oolong.png" alt="Logo">
         </a>
+        <div class="div-bouton-recherche">
+            <form action="/recherche" method="get">
+                <input class="search-box" type="text" placeholder="Rechercher...">
+                <button class="search-button">🔍</button>
+            </form>
+    
+            <button class="bouton-connexion">Connexion</button>
+        </div>
 
-        <button class="bouton-connexion">Connexion</button>
-
-        <form action="/recherche" method="get">
-            <input class="search-box" type="text" placeholder="Rechercher...">
-            <button class="search-button">🔍</button>
-        </form>
     </header>
     
 </body>

@@ -61,3 +61,19 @@ nav a {
     color: rgba(108, 60, 16, 1);
 
 }
+
+.bouton-connexion {
+    height: 40px;
+    width: 100px;
+    background-color: rgb(242, 228, 203);
+    border-radius: 20px;
+    border-color: rgb(228, 213, 186);
+    
+}
+
+.div-bouton-recherche {
+    width: 550px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+}

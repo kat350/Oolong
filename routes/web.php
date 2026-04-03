@@ -17,3 +17,7 @@ Route::get('/reunion', function(){
 Route::get('/taches', function(){
     return view('taches');
 })->name('taches');
+
+Route::get('/welcome', function(){
+    return view('welcome');
+})->name('welcome');

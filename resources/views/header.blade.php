@@ -15,7 +15,7 @@
             <ul><a href="/taches">Tâches</a></ul>
             <ul><a href="/reunion">Reunions</a></ul>
         </nav>
-        <a href="welcome.blade.php" onclick="location.reload(); return false;">
+        <a href="/welcome">
             <img class="logo" src="../img/logo_oolong.png" alt="Logo">
         </a>
         <div class="div-bouton-recherche">

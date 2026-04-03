@@ -7,11 +7,18 @@
     <title>Taches</title>
 </head>
 <body>
-    <div class="todo-container"></div>
-        <H2>Tâches : </H2>
-            <input type="checkbox">
-
-
+    @include('header')
+ 
+    <div class="todo1"></div>
+       <H2>Tâches : </H2>
+            <ul class="container1" >
+                <input type="checkbox">
+                <input type="checkbox">
+                <input type="checkbox">
+                <input type="checkbox">
+                <input type="checkbox">
+            </ul>
+    </div>
         
 </body>
 </html>

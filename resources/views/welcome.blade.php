@@ -12,5 +12,7 @@
     @include('header')
     
     <h1>Coucou</h1>
+    
+    @include('footer')
 </body>
 </html>

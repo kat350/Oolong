@@ -21,3 +21,7 @@ Route::get('/taches', function(){
 Route::get('/welcome', function(){
     return view('welcome');
 })->name('welcome');
+
+Route::get('/footer', function(){
+    return view('footer');
+})->name('footer');

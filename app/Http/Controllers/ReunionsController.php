@@ -18,7 +18,7 @@ class ReunionsController extends Controller
 
     public function reunionById($id)
     {
-        $reunion = Reunion::where('id', $id)->first(); // ✅ correction : $reunion pas $reunions
+        $reunion = Reunion::where('id', $id)->first();
         return view('reunion', ['reunion' => $reunion]);
     }
 }

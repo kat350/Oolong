@@ -29,7 +29,6 @@
                 </article>       
         @endif
         @endif
-
     </section>
 </body>
 </html>

@@ -6,23 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('taches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('description');
-            $table->datetime('start_date');
+            $table->string('titre');
+            $table->text('description')->nullable();
+            $table->date('date_echeance');
+            // enum = liste de valeurs autorisées
+            $table->enum('statut', ['todo', 'en_cours', 'terminee'])->default('todo');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('taches');

@@ -1,27 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CalendrierController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/header', function(){
-    return view('header');
-})->name('header');
+// Routes existantes
+Route::get('/header',   fn() => view('header'))->name('header');
+Route::get('/taches',   fn() => view('taches'))->name('taches');
+Route::get('/welcome',  fn() => view('welcome'))->name('welcome');
+Route::get('/footer',   fn() => view('footer'))->name('footer');
+Route::get('/reunion',  fn() => view('reunion'))->name('reunion');
 
-Route::get('/reunion', function(){
-    return view('reunion');
-})->name('reunion');
-
-Route::get('/taches', function(){
-    return view('taches');
-})->name('taches');
-
-Route::get('/welcome', function(){
-    return view('welcome');
-})->name('welcome');
-
-Route::get('/footer', function(){
-    return view('footer');
-})->name('footer');
+// ✅ Nouvelles routes du calendrier
+Route::get('/calendrier', [CalendrierController::class, 'index'])->name('calendrier');
+Route::post('/reunions',  [CalendrierController::class, 'storeReunion'])->name('reunions.store');
+Route::post('/taches-store', [CalendrierController::class, 'storeTache'])->name('taches.store');

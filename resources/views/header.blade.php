@@ -7,11 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Itim&family=Lobster&display=swap" rel="stylesheet">
+    <link class="favicon" rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
 </head>
 <body>
     <header>
         <nav class="nav">
-            <ul><a href="">Calendrier</a></ul>
+            <ul><a href="/calendrier">Calendrier</a></ul>
             <ul><a href="/taches">Tâches</a></ul>
             <ul><a href="/reunion">Reunions</a></ul>
         </nav>

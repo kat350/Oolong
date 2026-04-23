@@ -2,7 +2,7 @@
 ::before,
 ::after {
     margin:0;
-    padding: 5px;
+    padding: 0px;
     box-sizing: border-box;
 }
 
@@ -10,6 +10,8 @@ footer {
     display: flex;
     background-size: cover;
     justify-content: space-around;
+    border: 2px solid black;
+
 }
 
 .logo-figma {
@@ -40,11 +42,13 @@ footer {
 .nav-logo {
     display: flex;
     flex-direction: column;
+    margin-top: 15px;
 }
 .nav-cases {
     padding: 5px;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 }
 h2 {
     margin-bottom: 20px;
@@ -54,10 +58,12 @@ h2 {
     padding: 5px;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .nav-resources {
     padding: 5px;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 }

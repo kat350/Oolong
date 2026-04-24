@@ -22,3 +22,4 @@ class ReunionsController extends Controller
         return view('reunion', ['reunion' => $reunion]);
     }
 }
+>>>>>>> e6f690d3fd06040e37ec64d16bbbf4528d93c89d

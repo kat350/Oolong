@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendrier</title>
     <style>
-        /* ===== COULEURS (identiques à ton image) ===== */
+        
         :root {
             --bg-brown:    #a07850;
             --bg-cream:    #f5e6c8;
@@ -20,11 +20,15 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        .contenu-principal {
+            padding: 30px 40px;
+        }
+        
         body {
             background: var(--bg-brown);
             font-family: 'Segoe UI', sans-serif;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0px;
         }
 
         h1 {
@@ -260,196 +264,200 @@
     </style>
 </head>
 <body>
+@include('header')
+<div class="contenu-principal">
 
-<h1>Calendriers</h1>
-
-{{-- Message de succès après ajout --}}
-@if(session('success'))
-    <div class="alert-success">✅ {{ session('success') }}</div>
-@endif
-
-{{-- Navigation entre les mois --}}
-@php
-    // On calcule le mois précédent et suivant
-    $moisPrecedent = \Carbon\Carbon::create($annee, $mois, 1)->subMonth();
-    $moisSuivant   = \Carbon\Carbon::create($annee, $mois, 1)->addMonth();
-    $nomsMois = ['', 'Janvier','Février','Mars','Avril','Mai','Juin',
-                 'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-@endphp
-
-<div class="nav-mois">
-    <a href="{{ route('calendrier', ['mois' => $moisPrecedent->month, 'annee' => $moisPrecedent->year]) }}">‹</a>
-    <span>{{ $nomsMois[$mois] }} {{ $annee }}</span>
-    <a href="{{ route('calendrier', ['mois' => $moisSuivant->month, 'annee' => $moisSuivant->year]) }}">›</a>
-</div>
-
-<button class="btn-ajouter" onclick="ouvrirModal()">+ Ajouter</button>
-
-{{-- Grille du calendrier --}}
-<div class="calendrier-container">
-    <div class="jours-semaine">
-        <div>Dim</div><div>Lun</div><div>Mar</div>
-        <div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div>
+    <h1>Calendriers</h1>
+    
+    {{-- Message de succès après ajout --}}
+    @if(session('success'))
+        <div class="alert-success">✅ {{ session('success') }}</div>
+    @endif
+    
+    {{-- Navigation entre les mois --}}
+    @php
+        // On calcule le mois précédent et suivant
+        $moisPrecedent = \Carbon\Carbon::create($annee, $mois, 1)->subMonth();
+        $moisSuivant   = \Carbon\Carbon::create($annee, $mois, 1)->addMonth();
+        $nomsMois = ['', 'Janvier','Février','Mars','Avril','Mai','Juin',
+                     'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    @endphp
+    
+    <div class="nav-mois">
+        <a href="{{ route('calendrier', ['mois' => $moisPrecedent->month, 'annee' => $moisPrecedent->year]) }}">‹</a>
+        <span>{{ $nomsMois[$mois] }} {{ $annee }}</span>
+        <a href="{{ route('calendrier', ['mois' => $moisSuivant->month, 'annee' => $moisSuivant->year]) }}">›</a>
     </div>
-
-    <div class="grille">
-        @php
-            $premierJour = $debutMois->dayOfWeek; // 0=Dim, 1=Lun...
-            $nbJours     = $debutMois->daysInMonth;
-            $today       = now()->format('Y-m-d');
-        @endphp
-
-        {{-- Cases vides avant le 1er du mois --}}
-        @for($i = 0; $i < $premierJour; $i++)
-            <div class="jour vide"></div>
-        @endfor
-
-        {{-- Les jours du mois --}}
-        @for($jour = 1; $jour <= $nbJours; $jour++)
-            @php
-                $dateStr = sprintf('%04d-%02d-%02d', $annee, $mois, $jour);
-                $estAujourdhui = ($dateStr === $today);
-            @endphp
-
-            <div class="jour {{ $estAujourdhui ? 'aujourd-hui' : '' }}"
-                 onclick="ouvrirModal('{{ $dateStr }}')">
-
-                <div class="num-jour">{{ $jour }}</div>
-
-                {{-- Réunions du jour --}}
-                @if(isset($reunions[$dateStr]))
-                    @foreach($reunions[$dateStr] as $r)
-                        <div class="event reunion" title="{{ $r->titre }}">
-                            📅 {{ $r->titre }}
-                        </div>
-                    @endforeach
-                @endif
-
-                {{-- Tâches du jour --}}
-                @if(isset($taches[$dateStr]))
-                    @foreach($taches[$dateStr] as $t)
-                        <div class="event tache" title="{{ $t->titre }}">
-                            ✅ {{ $t->titre }}
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-        @endfor
-    </div>
-</div>
-
-{{-- MODAL D'AJOUT --}}
-<div class="modal-overlay" id="modal">
-    <div class="modal">
-        <h2>Ajouter un événement</h2>
-
-        <div class="tabs">
-            <button class="tab actif" id="tab-reunion" onclick="switchTab('reunion')">📅 Réunion</button>
-            <button class="tab" id="tab-tache"   onclick="switchTab('tache')">✅ Tâche</button>
+    
+    <button class="btn-ajouter" onclick="ouvrirModal()">+ Ajouter</button>
+    
+    {{-- Grille du calendrier --}}
+    <div class="calendrier-container">
+        <div class="jours-semaine">
+            <div>Dim</div><div>Lun</div><div>Mar</div>
+            <div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div>
         </div>
-
-        {{-- Formulaire Réunion --}}
-        <form id="form-reunion" action="{{ route('reunions.store') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label>Titre *</label>
-                <input type="text" name="titre" required placeholder="Nom de la réunion">
-            </div>
-            <div class="form-group">
-                <label>Date *</label>
-                <input type="date" name="date_reunion" id="date-reunion" required>
-            </div>
-            <div class="form-group">
-                <label>Heure début</label>
-                <input type="time" name="heure_debut">
-            </div>
-            <div class="form-group">
-                <label>Heure fin</label>
-                <input type="time" name="heure_fin">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" rows="2" placeholder="Optionnel..."></textarea>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-cancel" onclick="fermerModal()">Annuler</button>
-                <button type="submit" class="btn-submit">Enregistrer</button>
-            </div>
-        </form>
-
-        {{-- Formulaire Tâche --}}
-        <form id="form-tache" action="{{ route('taches.store') }}" method="POST" style="display:none">
-            @csrf
-            <div class="form-group">
-                <label>Titre *</label>
-                <input type="text" name="titre" required placeholder="Nom de la tâche">
-            </div>
-            <div class="form-group">
-                <label>Date d'échéance *</label>
-                <input type="date" name="date_echeance" id="date-tache" required>
-            </div>
-            <div class="form-group">
-                <label>Statut</label>
-                <select name="statut">
-                    <option value="todo">À faire</option>
-                    <option value="en_cours">En cours</option>
-                    <option value="terminee">Terminée</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" rows="2" placeholder="Optionnel..."></textarea>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-cancel" onclick="fermerModal()">Annuler</button>
-                <button type="submit" class="btn-submit">Enregistrer</button>
-            </div>
-        </form>
+    
+        <div class="grille">
+            @php
+                $premierJour = $debutMois->dayOfWeek; // 0=Dim, 1=Lun...
+                $nbJours     = $debutMois->daysInMonth;
+                $today       = now()->format('Y-m-d');
+            @endphp
+    
+            {{-- Cases vides avant le 1er du mois --}}
+            @for($i = 0; $i < $premierJour; $i++)
+                <div class="jour vide"></div>
+            @endfor
+    
+            {{-- Les jours du mois --}}
+            @for($jour = 1; $jour <= $nbJours; $jour++)
+                @php
+                    $dateStr = sprintf('%04d-%02d-%02d', $annee, $mois, $jour);
+                    $estAujourdhui = ($dateStr === $today);
+                @endphp
+    
+                <div class="jour {{ $estAujourdhui ? 'aujourd-hui' : '' }}"
+                     onclick="ouvrirModal('{{ $dateStr }}')">
+    
+                    <div class="num-jour">{{ $jour }}</div>
+    
+                    {{-- Réunions du jour --}}
+                    @if(isset($reunions[$dateStr]))
+                        @foreach($reunions[$dateStr] as $r)
+                            <div class="event reunion" title="{{ $r->titre }}">
+                                📅 {{ $r->titre }}
+                            </div>
+                        @endforeach
+                    @endif
+    
+                    {{-- Tâches du jour --}}
+                    @if(isset($taches[$dateStr]))
+                        @foreach($taches[$dateStr] as $t)
+                            <div class="event tache" title="{{ $t->titre }}">
+                                ✅ {{ $t->titre }}
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            @endfor
+        </div>
     </div>
+    
+    {{-- MODAL D'AJOUT --}}
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2>Ajouter un événement</h2>
+    
+            <div class="tabs">
+                <button class="tab actif" id="tab-reunion" onclick="switchTab('reunion')">📅 Réunion</button>
+                <button class="tab" id="tab-tache"   onclick="switchTab('tache')">✅ Tâche</button>
+            </div>
+    
+            {{-- Formulaire Réunion --}}
+            <form id="form-reunion" action="{{ route('reunions.store') }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label>Titre *</label>
+                    <input type="text" name="titre" required placeholder="Nom de la réunion">
+                </div>
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" name="date_reunion" id="date-reunion" required>
+                </div>
+                <div class="form-group">
+                    <label>Heure début</label>
+                    <input type="time" name="heure_debut">
+                </div>
+                <div class="form-group">
+                    <label>Heure fin</label>
+                    <input type="time" name="heure_fin">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="2" placeholder="Optionnel..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="fermerModal()">Annuler</button>
+                    <button type="submit" class="btn-submit">Enregistrer</button>
+                </div>
+            </form>
+    
+            {{-- Formulaire Tâche --}}
+            <form id="form-tache" action="{{ route('taches.store') }}" method="POST" style="display:none">
+                @csrf
+                <div class="form-group">
+                    <label>Titre *</label>
+                    <input type="text" name="titre" required placeholder="Nom de la tâche">
+                </div>
+                <div class="form-group">
+                    <label>Date d'échéance *</label>
+                    <input type="date" name="date_echeance" id="date-tache" required>
+                </div>
+                <div class="form-group">
+                    <label>Statut</label>
+                    <select name="statut">
+                        <option value="todo">À faire</option>
+                        <option value="en_cours">En cours</option>
+                        <option value="terminee">Terminée</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="2" placeholder="Optionnel..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="fermerModal()">Annuler</button>
+                    <button type="submit" class="btn-submit">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // ===== GESTION DU MODAL =====
+    
+        function ouvrirModal(date = null) {
+            document.getElementById('modal').classList.add('actif');
+            // Si on clique sur un jour, on pré-remplit la date
+            if (date) {
+                document.getElementById('date-reunion').value = date;
+                document.getElementById('date-tache').value   = date;
+            }
+        }
+    
+        function fermerModal() {
+            document.getElementById('modal').classList.remove('actif');
+        }
+    
+        // Fermer si on clique en dehors du modal
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) fermerModal();
+        });
+    
+        // ===== ONGLETS RÉUNION / TÂCHE =====
+    
+        function switchTab(type) {
+            const formReunion = document.getElementById('form-reunion');
+            const formTache   = document.getElementById('form-tache');
+            const tabReunion  = document.getElementById('tab-reunion');
+            const tabTache    = document.getElementById('tab-tache');
+    
+            if (type === 'reunion') {
+                formReunion.style.display = 'block';
+                formTache.style.display   = 'none';
+                tabReunion.classList.add('actif');
+                tabTache.classList.remove('actif');
+            } else {
+                formTache.style.display   = 'block';
+                formReunion.style.display = 'none';
+                tabTache.classList.add('actif');
+                tabReunion.classList.remove('actif');
+            }
+        }
+    </script>
 </div>
 
-<script>
-    // ===== GESTION DU MODAL =====
-
-    function ouvrirModal(date = null) {
-        document.getElementById('modal').classList.add('actif');
-        // Si on clique sur un jour, on pré-remplit la date
-        if (date) {
-            document.getElementById('date-reunion').value = date;
-            document.getElementById('date-tache').value   = date;
-        }
-    }
-
-    function fermerModal() {
-        document.getElementById('modal').classList.remove('actif');
-    }
-
-    // Fermer si on clique en dehors du modal
-    document.getElementById('modal').addEventListener('click', function(e) {
-        if (e.target === this) fermerModal();
-    });
-
-    // ===== ONGLETS RÉUNION / TÂCHE =====
-
-    function switchTab(type) {
-        const formReunion = document.getElementById('form-reunion');
-        const formTache   = document.getElementById('form-tache');
-        const tabReunion  = document.getElementById('tab-reunion');
-        const tabTache    = document.getElementById('tab-tache');
-
-        if (type === 'reunion') {
-            formReunion.style.display = 'block';
-            formTache.style.display   = 'none';
-            tabReunion.classList.add('actif');
-            tabTache.classList.remove('actif');
-        } else {
-            formTache.style.display   = 'block';
-            formReunion.style.display = 'none';
-            tabTache.classList.add('actif');
-            tabReunion.classList.remove('actif');
-        }
-    }
-</script>
-
+@include('footer')
 </body>
 </html>

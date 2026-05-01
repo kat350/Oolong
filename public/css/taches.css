@@ -1,11 +1,144 @@
 body {
     background-color: rgba(255, 245, 227, 1);
+    font-family: 'Indie Flower', cursive;
 }
 
-.container1 {
+.taches-container {
+    background-color: #B07848;
+    border-radius: 18px;
+    padding: 35px 45px 50px 45px;
+    width: 90%;
+    max-width: 850px;
+    margin: 40px auto;
+}
+
+.taches-titre {
+    color: #F5DEB3;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+}
+
+.tache-item {
     display: flex;
-    flex-direction: column;
-    align-items:start;
-    margin: 10px;
-    
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.tache-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background-color: #E8DECE;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.tache-item input[type="checkbox"]:checked {
+    background-color: #D4B896;
+}
+
+.tache-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #7A5230;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.tache-label {
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    cursor: pointer;
+    flex: 1;
+    transition: opacity 0.2s;
+}
+
+.tache-item input[type="checkbox"]:checked + .tache-label {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* Bouton + */
+.btn-ajouter {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background-color: #E8DECE;
+    border: none;
+    border-radius: 4px;
+    color: #7A5230;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Indie Flower', cursive;
+}
+
+/* Zone texte/input (occupe le même espace) */
+.tache-zone-texte {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+/* Input nouvelle tâche */
+.input-nouvelle-tache {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #E8DECE;
+    color: #FFFFFF;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.5rem;
+    outline: none;
+    padding: 2px 6px;
+}
+
+.input-nouvelle-tache::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Bouton confirmer ✓ */
+.btn-confirmer {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background-color: #E8DECE;
+    border: none;
+    border-radius: 4px;
+    color: #7A5230;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Bouton supprimer × */
+.btn-supprimer {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.2s;
+    min-width: 24px;
+    font-family: 'Indie Flower', cursive;
+}
+
+.btn-supprimer:hover {
+    color: #FFFFFF;
 }

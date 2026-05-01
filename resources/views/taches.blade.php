@@ -175,7 +175,7 @@
                            id="tache-{{ $tache->id }}"
                            {{ $tache->completee ? 'checked' : '' }}
                            onchange="toggleTache({{ $tache->id }}, this)">
-                    <label class="tache-label" for="tache-{{ $tache->id }}">{{ $tache->description }}</label>
+                           <label class="tache-label" for="tache-{{ $tache->id }}">{{ $tache->titre }}</label>
                     <button class="btn-supprimer" onclick="supprimerTache({{ $tache->id }}, this)">×</button>
                 </div>
             @endforeach
@@ -216,7 +216,7 @@
                     div.dataset.id = tache.id;
                     div.innerHTML =
                         '<input type="checkbox" id="tache-' + tache.id + '" onchange="toggleTache(' + tache.id + ', this)">' +
-                        '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.description) + '</label>' +
+                        '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.titre) + '</label>' +
                         '<button class="btn-supprimer" onclick="supprimerTache(' + tache.id + ', this)">×</button>';
                     liste.prepend(div);
                 }

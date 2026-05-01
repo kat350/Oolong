@@ -8,14 +8,15 @@ class Tache extends Model
 {
     protected $fillable = [
         'user_id',
+        'titre',
         'description',
-        'start_date',
+        'date_echeance',
+        'statut',
         'completee',
     ];
 
     protected $casts = [
         'completee' => 'boolean',
-        'start_date' => 'datetime',
     ];
 
     public function user()

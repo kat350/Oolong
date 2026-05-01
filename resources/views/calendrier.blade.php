@@ -267,7 +267,7 @@
 @include('header')
 <div class="contenu-principal">
 
-    <h1>Calendriers</h1>
+    <h1>Calendriers de {{ auth()->user()->name }}</h1>
     
     {{-- Message de succès après ajout --}}
     @if(session('success'))

@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Tache;
+use App\Models\Calendrier;
+use App\Models\Reunion;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -33,5 +36,8 @@ class User extends Authenticatable
     public function taches()
     {
         return $this->hasMany(Tache::class);
+    }
+    public function calendriers() {
+        return $this->hasMany(Calendrier::class);
     }
 }

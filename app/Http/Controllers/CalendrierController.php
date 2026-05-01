@@ -24,14 +24,15 @@ class CalendrierController extends Controller
         $finMois   = Carbon::create($annee, $mois, 1)->endOfMonth();
 
         // On récupère toutes les réunions du mois
-        $reunions = Reunion::whereBetween('date_reunion', [$debutMois, $finMois])
-                           ->get()
-                           ->groupBy('date_reunion'); // on groupe par date pour accès facile
-
+        $reunions = Reunion::where('user_id', auth()->id())
+                   ->whereBetween('date_reunion', [$debutMois, $finMois])
+                   ->get()
+                   ->groupBy('date_reunion');
         // On récupère toutes les tâches du mois
-        $taches = Tache::whereBetween('date_echeance', [$debutMois, $finMois])
-                       ->get()
-                       ->groupBy('date_echeance');
+        $taches = Tache::where('user_id', auth()->id())
+               ->whereBetween('date_echeance', [$debutMois, $finMois])
+               ->get()
+               ->groupBy('date_echeance');
 
         // On passe tout à la vue
         return view('calendrier', [
@@ -58,7 +59,7 @@ class CalendrierController extends Controller
         ]);
 
         // Création en BDD
-        Reunion::create($request->all());
+        Reunion::create(array_merge($request->all(), ['user_id' => auth()->id()]));
 
         // Redirection vers le calendrier avec un message de succès
         return redirect()->route('calendrier', [
@@ -79,7 +80,7 @@ class CalendrierController extends Controller
             'statut'        => 'in:todo,en_cours,terminee',
         ]);
 
-        Tache::create($request->all());
+        Tache::create(array_merge($request->all(), ['user_id' => auth()->id()]));
 
         return redirect()->route('calendrier', [
             'mois'  => Carbon::parse($request->date_echeance)->month,

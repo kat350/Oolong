@@ -18,12 +18,22 @@ class TacheController extends Controller
         $request->validate(['description' => 'required|string|max:255']);
 
         $tache = auth()->user()->taches()->create([
-            'description' => $request->description,
-            'start_date'  => now(),
-            'completee'   => false,
+            'titre'         => $request->description,
+            'date_echeance' => $request->date_echeance ?? now()->toDateString(),
+            'statut'        => 'todo',
+            'completee'     => false,
         ]);
 
-        return response()->json($tache);
+        // Si c'est une requête AJAX (page tâches), on retourne du JSON
+        if ($request->expectsJson()) {
+            return response()->json($tache);
+        }
+
+        // Sinon (formulaire du calendrier), on redirige vers le calendrier
+        return redirect()->route('calendrier', [
+            'mois'  => now()->month,
+            'annee' => now()->year,
+        ])->with('success', 'Tâche ajoutée !');
     }
 
     public function toggle(Tache $tache)

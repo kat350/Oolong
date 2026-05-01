@@ -34,6 +34,8 @@ Route::get('/reunion',  [ReunionsController::class, 'all_reunions'])->name('reun
 Route::post('/reunion', [ReunionsController::class, 'storeReunion'])->name('reunions.store');
 
 // Calendrier
-Route::get('/calendrier',  [CalendrierController::class, 'index'])->name('calendrier');
-Route::post('/reunions',   [CalendrierController::class, 'storeReunion'])->name('reunions.store');
-Route::post('/taches-store', [CalendrierController::class, 'storeTache'])->name('taches-store.store');
+Route::middleware('auth')->group(function () {
+Route::get('/calendrier', [CalendrierController::class, 'index'])->name('calendrier');
+Route::post('/calendrier', [CalendrierController::class, 'store'])->name('calendrier.store');
+Route::delete('/calendrier/{id}', [CalendrierController::class, 'destroy'])->name('calendrier.destroy');
+});

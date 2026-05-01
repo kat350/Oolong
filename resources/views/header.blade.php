@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="{{ asset('css/style_header.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Itim&family=Lobster&display=swap" rel="stylesheet">
 
 <header>
@@ -17,6 +17,19 @@
             <input class="search-box" type="text" placeholder="Rechercher...">
             <button class="search-button">🔍</button>
         </form>
-        <button class="bouton-connexion">Connexion</button>
+
+        @auth
+            <div class="utilisateur-connecte">
+                <span class="nom-utilisateur">{{ auth()->user()->name }}</span>
+                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="bouton-connexion">Déconnexion</button>
+                </form>
+            </div>
+        @else
+            <a href="{{ route('connexion') }}">
+                <button class="bouton-connexion">Connexion</button>
+            </a>
+        @endauth
     </div>
 </header>

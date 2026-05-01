@@ -37,7 +37,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
 }
 
 .nav {
@@ -52,8 +52,8 @@ header {
     font-family: "Indie Flower", cursive;
     font-weight: 400;
     font-style: normal;
-    
-    
+
+
 }
 
 nav a {
@@ -68,12 +68,24 @@ nav a {
     background-color: rgb(242, 228, 203);
     border-radius: 20px;
     border-color: rgb(228, 213, 186);
-    
+
 }
 
 .div-bouton-recherche {
     width: 550px;
     display: flex;
     justify-content: space-around;
-    align-items: flex-end;
+    align-items: center;
+}
+
+.utilisateur-connecte {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nom-utilisateur {
+    font-family: 'Indie Flower', cursive;
+    color: rgba(108, 60, 16, 1);
+    font-size: 1rem;
 }

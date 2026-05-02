@@ -28,7 +28,7 @@
 
                 <div class="form-groupe">
                     <label class="form-label" for="name">
-                        <span class="feuille">🍂</span> Nom :
+                        <img src="{{ asset('img/feuille_logo_mini.png') }}" class="feuille" alt=""> Nom :
                     </label>
                     <input
                         class="form-input"
@@ -44,7 +44,7 @@
 
                 <div class="form-groupe">
                     <label class="form-label" for="email">
-                        <span class="feuille">🍂</span> Email :
+                        <img src="{{ asset('img/feuille_logo_mini.png') }}" class="feuille" alt=""> Email :
                     </label>
                     <input
                         class="form-input"
@@ -60,7 +60,7 @@
 
                 <div class="form-groupe">
                     <label class="form-label" for="password">
-                        <span class="feuille">🍂</span> Mot de passe :
+                        <img src="{{ asset('img/feuille_logo_mini.png') }}" class="feuille" alt=""> Mot de passe :
                     </label>
                     <input
                         class="form-input"
@@ -75,7 +75,7 @@
 
                 <div class="form-groupe">
                     <label class="form-label" for="password_confirmation">
-                        <span class="feuille">🍂</span> Confirmer le mot de passe :
+                        <img src="{{ asset('img/feuille_logo_mini.png') }}" class="feuille" alt=""> Confirmer le mot de passe :
                     </label>
                     <input
                         class="form-input"

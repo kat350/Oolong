@@ -1,28 +1,72 @@
 body {
     background-color: rgba(255, 245, 227, 1);
     font-family: 'Indie Flower', cursive;
+    margin: 0;
+}
+
+.listes-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 40px;
+    align-items: flex-start;
 }
 
 .taches-container {
-    background-color: #B07848;
+    background-color: rgba(169, 127, 100, 1);
     border-radius: 18px;
-    padding: 35px 45px 50px 45px;
-    width: 90%;
-    max-width: 850px;
-    margin: 40px auto;
+    padding: 30px 35px 40px 35px;
+    width: 340px;
+    min-width: 340px;
+    flex-shrink: 0;
+}
+
+.liste-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    gap: 8px;
 }
 
 .taches-titre {
     color: #F5DEB3;
     font-size: 1.8rem;
-    margin-bottom: 25px;
+    margin: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+}
+
+.btn-supprimer-liste {
+    background: none;
+    border: none;
+    color: rgba(245, 222, 179, 0.5);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.2s;
+    font-family: 'Indie Flower', cursive;
+}
+
+.btn-supprimer-liste:hover {
+    color: #F5DEB3;
 }
 
 .tache-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 18px;
     margin-bottom: 22px;
+}
+
+.tache-item input[type="checkbox"],
+.tache-item .btn-ajouter,
+.tache-item .btn-confirmer,
+.tache-item .btn-supprimer {
+    margin-top: 4px;
+    flex-shrink: 0;
 }
 
 .tache-item input[type="checkbox"] {
@@ -59,6 +103,9 @@ body {
     cursor: pointer;
     flex: 1;
     transition: opacity 0.2s;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
 .tache-item input[type="checkbox"]:checked + .tache-label {
@@ -66,7 +113,6 @@ body {
     opacity: 0.7;
 }
 
-/* Bouton + */
 .btn-ajouter {
     width: 28px;
     height: 28px;
@@ -84,14 +130,12 @@ body {
     font-family: 'Indie Flower', cursive;
 }
 
-/* Zone texte/input (occupe le même espace) */
 .tache-zone-texte {
     flex: 1;
     display: flex;
     align-items: center;
 }
 
-/* Input nouvelle tâche */
 .input-nouvelle-tache {
     width: 100%;
     background-color: transparent;
@@ -108,7 +152,6 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
-/* Bouton confirmer ✓ */
 .btn-confirmer {
     width: 28px;
     height: 28px;
@@ -125,7 +168,6 @@ body {
     justify-content: center;
 }
 
-/* Bouton supprimer × */
 .btn-supprimer {
     margin-left: auto;
     background: none;
@@ -141,4 +183,71 @@ body {
 
 .btn-supprimer:hover {
     color: #FFFFFF;
+}
+
+.carte-nouvelle-liste {
+    background-color: #F2E4CB;
+    border: none;
+    border-radius: 18px;
+    width: 340px;
+    min-width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    min-height: 200px;
+    transition: background-color 0.2s;
+}
+
+.carte-nouvelle-liste:hover {
+    background-color: rgba(240, 228, 210, 1);
+}
+
+.carte-nouvelle-liste-icone {
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(180, 160, 140, 0.6);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(180, 160, 140, 0.8);
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+.form-nouvelle-liste {
+    background-color: rgba(169, 127, 100, 1);
+    border-radius: 18px;
+    padding: 30px 35px;
+    width: 340px;
+    min-width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.input-nom-liste {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #F5DEB3;
+    color: #F5DEB3;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.8rem;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.input-nom-liste::placeholder {
+    color: rgba(245, 222, 179, 0.5);
+}
+
+.form-nouvelle-liste-boutons {
+    display: flex;
+    gap: 12px;
 }

@@ -27,7 +27,7 @@ class ReunionsController extends Controller
     {
         // Validation : on vérifie que les données sont correctes
         $request->validate([
-            'titre'        => 'required|string|max:255',
+            'sujet'        => 'required|string|max:255',
             'date_reunion' => 'required|date',
             'heure_debut'  => 'nullable|date_format:H:i',
             'heure_fin'    => 'nullable|date_format:H:i',
@@ -36,5 +36,7 @@ class ReunionsController extends Controller
 
         // Création en BDD
         Reunion::create($request->all());
+
+        return redirect()->route('reunion')->with('success', 'Réunion ajoutée.');
     }
 }

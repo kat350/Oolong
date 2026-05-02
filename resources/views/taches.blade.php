@@ -10,28 +10,72 @@
         body {
             background-color: rgba(255, 245, 227, 1);
             font-family: 'Indie Flower', cursive;
+            margin: 0;
+        }
+
+        .listes-wrapper {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 40px;
+            align-items: flex-start;
         }
 
         .taches-container {
-            background-color: #B07848;
+            background-color: rgba(169, 127, 100, 1);
             border-radius: 18px;
-            padding: 35px 45px 50px 45px;
-            width: 90%;
-            max-width: 1050px;
-            margin: 40px auto;
+            padding: 30px 35px 40px 35px;
+            width: 340px;
+            min-width: 340px;
+            flex-shrink: 0;
+        }
+
+        .liste-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            gap: 8px;
         }
 
         .taches-titre {
             color: #F5DEB3;
             font-size: 1.8rem;
-            margin-bottom: 25px;
+            margin: 0;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
+        }
+
+        .btn-supprimer-liste {
+            background: none;
+            border: none;
+            color: rgba(245, 222, 179, 0.5);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 4px;
+            transition: color 0.2s;
+            font-family: 'Indie Flower', cursive;
+        }
+
+        .btn-supprimer-liste:hover {
+            color: #F5DEB3;
         }
 
         .tache-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 18px;
             margin-bottom: 22px;
+        }
+
+        .tache-item input[type="checkbox"],
+        .tache-item .btn-ajouter,
+        .tache-item .btn-confirmer,
+        .tache-item .btn-supprimer {
+            margin-top: 4px;
+            flex-shrink: 0;
         }
 
         .tache-item input[type="checkbox"] {
@@ -68,6 +112,9 @@
             cursor: pointer;
             flex: 1;
             transition: opacity 0.2s;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
         }
 
         .tache-item input[type="checkbox"]:checked + .tache-label {
@@ -146,55 +193,147 @@
         .btn-supprimer:hover {
             color: #FFFFFF;
         }
+
+        .carte-nouvelle-liste {
+            background-color: #F2E4CB;
+            border: none;
+            border-radius: 18px;
+            width: 340px;
+            min-width: 340px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            min-height: 200px;
+            transition: background-color 0.2s;
+        }
+
+        .carte-nouvelle-liste:hover {
+            background-color: rgba(240, 228, 210, 1);
+        }
+
+        .carte-nouvelle-liste-icone {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(180, 160, 140, 0.6);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(180, 160, 140, 0.8);
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .form-nouvelle-liste {
+            background-color: rgba(169, 127, 100, 1);
+            border-radius: 18px;
+            padding: 30px 35px;
+            width: 340px;
+            min-width: 340px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .input-nom-liste {
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid #F5DEB3;
+            color: #F5DEB3;
+            font-family: 'Indie Flower', cursive;
+            font-size: 1.8rem;
+            outline: none;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .input-nom-liste::placeholder {
+            color: rgba(245, 222, 179, 0.5);
+        }
+
+        .form-nouvelle-liste-boutons {
+            display: flex;
+            gap: 12px;
+        }
     </style>
 </head>
 <body>
     @include('header')
 
-    <div class="taches-container">
-        <p class="taches-titre">Tâches :</p>
+    <div class="listes-wrapper">
 
-        <!-- Ligne ajouter -->
-        <div class="tache-item" id="row-ajouter">
-            <button class="btn-ajouter" id="btn-ajouter" onclick="ouvrirAjout()">+</button>
-            <div class="tache-zone-texte">
-                <span class="tache-label" id="label-ajouter">Ajouter une tâche</span>
-                <input type="text" class="input-nouvelle-tache" id="input-nouvelle-tache"
-                       placeholder="Nom de la tâche..."
-                       onkeydown="if(event.key==='Enter') confirmerAjout()"
-                       style="display:none;">
+        @foreach($listes as $liste)
+        <div class="taches-container" data-liste-id="{{ $liste->id }}">
+            <div class="liste-header">
+                <p class="taches-titre">{{ $liste->nom }}</p>
+                <button class="btn-supprimer-liste" onclick="supprimerListe({{ $liste->id }}, this)">×</button>
             </div>
-            <button class="btn-confirmer" id="btn-confirmer" onclick="confirmerAjout()" style="display:none;">✓</button>
-        </div>
 
-        <!-- Liste des tâches depuis la BDD -->
-        <div id="liste-taches">
-            @foreach ($taches as $tache)
+            <!-- Ligne ajouter une tâche -->
+            <div class="tache-item">
+                <button class="btn-ajouter" id="btn-ajouter-{{ $liste->id }}" onclick="ouvrirAjout({{ $liste->id }})">+</button>
+                <div class="tache-zone-texte">
+                    <span class="tache-label" id="label-ajouter-{{ $liste->id }}">Ajouter une tâche</span>
+                    <input type="text" class="input-nouvelle-tache" id="input-nouvelle-tache-{{ $liste->id }}"
+                           placeholder="Nom de la tâche..."
+                           onkeydown="if(event.key==='Enter') confirmerAjout({{ $liste->id }})"
+                           style="display:none;">
+                </div>
+                <button class="btn-confirmer" id="btn-confirmer-{{ $liste->id }}" onclick="confirmerAjout({{ $liste->id }})" style="display:none;">✓</button>
+            </div>
+
+            <!-- Liste des tâches -->
+            <div id="liste-{{ $liste->id }}">
+                @foreach($liste->taches as $tache)
                 <div class="tache-item" data-id="{{ $tache->id }}">
                     <input type="checkbox"
                            id="tache-{{ $tache->id }}"
                            {{ $tache->completee ? 'checked' : '' }}
                            onchange="toggleTache({{ $tache->id }}, this)">
-                           <label class="tache-label" for="tache-{{ $tache->id }}">{{ $tache->titre }}</label>
+                    <label class="tache-label" for="tache-{{ $tache->id }}">{{ $tache->description }}</label>
                     <button class="btn-supprimer" onclick="supprimerTache({{ $tache->id }}, this)">×</button>
                 </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
+        @endforeach
+
+        <!-- Carte ajouter une nouvelle liste -->
+        <div class="carte-nouvelle-liste" id="carte-nouvelle-liste" onclick="ouvrirNouveleListe()">
+            <div class="carte-nouvelle-liste-icone">+</div>
+        </div>
+
+        <!-- Formulaire création nouvelle liste (caché par défaut) -->
+        <div class="form-nouvelle-liste" id="form-nouvelle-liste" style="display:none;">
+            <input type="text" class="input-nom-liste" id="input-nouvelle-liste"
+                   placeholder="Nom de la liste..."
+                   onkeydown="if(event.key==='Enter') confirmerNouveleListe()">
+            <div class="form-nouvelle-liste-boutons">
+                <button class="btn-confirmer" onclick="confirmerNouveleListe()">✓</button>
+                <button class="btn-ajouter" onclick="annulerNouveleListe()">×</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        function ouvrirAjout() {
-            document.getElementById('label-ajouter').style.display = 'none';
-            document.getElementById('input-nouvelle-tache').style.display = 'block';
-            document.getElementById('btn-confirmer').style.display = 'flex';
-            document.getElementById('btn-ajouter').style.display = 'none';
-            document.getElementById('input-nouvelle-tache').focus();
+        function ouvrirAjout(listeId) {
+            document.getElementById('label-ajouter-' + listeId).style.display = 'none';
+            document.getElementById('input-nouvelle-tache-' + listeId).style.display = 'block';
+            document.getElementById('btn-confirmer-' + listeId).style.display = 'flex';
+            document.getElementById('btn-ajouter-' + listeId).style.display = 'none';
+            document.getElementById('input-nouvelle-tache-' + listeId).focus();
         }
 
-        async function confirmerAjout() {
-            const input = document.getElementById('input-nouvelle-tache');
+        async function confirmerAjout(listeId) {
+            const input = document.getElementById('input-nouvelle-tache-' + listeId);
             const texte = input.value.trim();
 
             if (texte !== '') {
@@ -205,28 +344,28 @@
                         'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ description: texte }),
+                    body: JSON.stringify({ description: texte, liste_id: listeId }),
                 });
 
                 if (res.ok) {
                     const tache = await res.json();
-                    const liste = document.getElementById('liste-taches');
+                    const conteneur = document.getElementById('liste-' + listeId);
                     const div = document.createElement('div');
                     div.className = 'tache-item';
                     div.dataset.id = tache.id;
                     div.innerHTML =
                         '<input type="checkbox" id="tache-' + tache.id + '" onchange="toggleTache(' + tache.id + ', this)">' +
-                        '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.titre) + '</label>' +
+                        '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.description) + '</label>' +
                         '<button class="btn-supprimer" onclick="supprimerTache(' + tache.id + ', this)">×</button>';
-                    liste.prepend(div);
+                    conteneur.prepend(div);
                 }
             }
 
             input.value = '';
             input.style.display = 'none';
-            document.getElementById('btn-confirmer').style.display = 'none';
-            document.getElementById('btn-ajouter').style.display = 'flex';
-            document.getElementById('label-ajouter').style.display = 'block';
+            document.getElementById('btn-confirmer-' + listeId).style.display = 'none';
+            document.getElementById('btn-ajouter-' + listeId).style.display = 'flex';
+            document.getElementById('label-ajouter-' + listeId).style.display = 'block';
         }
 
         async function toggleTache(id, checkbox) {
@@ -248,6 +387,85 @@
                 },
             });
             btn.closest('.tache-item').remove();
+        }
+
+        async function supprimerListe(listeId, btn) {
+            if (!confirm('Supprimer cette liste et toutes ses tâches ?')) return;
+
+            const res = await fetch('/listes/' + listeId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (res.ok) {
+                btn.closest('.taches-container').remove();
+            }
+        }
+
+        function ouvrirNouveleListe() {
+            document.getElementById('carte-nouvelle-liste').style.display = 'none';
+            document.getElementById('form-nouvelle-liste').style.display = 'flex';
+            document.getElementById('input-nouvelle-liste').focus();
+        }
+
+        function annulerNouveleListe() {
+            document.getElementById('form-nouvelle-liste').style.display = 'none';
+            document.getElementById('carte-nouvelle-liste').style.display = 'flex';
+            document.getElementById('input-nouvelle-liste').value = '';
+        }
+
+        async function confirmerNouveleListe() {
+            const input = document.getElementById('input-nouvelle-liste');
+            const nom = input.value.trim();
+            if (nom === '') return;
+
+            const res = await fetch('/listes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ nom }),
+            });
+
+            if (res.ok) {
+                const liste = await res.json();
+                const wrapper = document.querySelector('.listes-wrapper');
+                const carteElem = document.getElementById('carte-nouvelle-liste');
+                const formElem = document.getElementById('form-nouvelle-liste');
+
+                const div = document.createElement('div');
+                div.className = 'taches-container';
+                div.dataset.listeId = liste.id;
+                div.innerHTML = `
+                    <div class="liste-header">
+                        <p class="taches-titre">${escapeHtml(liste.nom)}</p>
+                        <button class="btn-supprimer-liste" onclick="supprimerListe(${liste.id}, this)">×</button>
+                    </div>
+                    <div class="tache-item">
+                        <button class="btn-ajouter" id="btn-ajouter-${liste.id}" onclick="ouvrirAjout(${liste.id})">+</button>
+                        <div class="tache-zone-texte">
+                            <span class="tache-label" id="label-ajouter-${liste.id}">Ajouter une tâche</span>
+                            <input type="text" class="input-nouvelle-tache" id="input-nouvelle-tache-${liste.id}"
+                                   placeholder="Nom de la tâche..."
+                                   onkeydown="if(event.key==='Enter') confirmerAjout(${liste.id})"
+                                   style="display:none;">
+                        </div>
+                        <button class="btn-confirmer" id="btn-confirmer-${liste.id}" onclick="confirmerAjout(${liste.id})" style="display:none;">✓</button>
+                    </div>
+                    <div id="liste-${liste.id}"></div>
+                `;
+
+                wrapper.insertBefore(div, carteElem);
+
+                input.value = '';
+                formElem.style.display = 'none';
+                carteElem.style.display = 'flex';
+            }
         }
 
         function escapeHtml(text) {

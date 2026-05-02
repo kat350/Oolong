@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Tache;
+use App\Models\Liste;
 use App\Models\Calendrier;
 use App\Models\Reunion;
 
@@ -37,7 +38,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tache::class);
     }
-    public function calendriers() {
+
+    public function listes()
+    {
+        return $this->hasMany(Liste::class);
+    }
+
+    public function calendriers()
+    {
         return $this->hasMany(Calendrier::class);
     }
 }

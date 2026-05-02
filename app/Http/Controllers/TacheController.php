@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Liste;
 use App\Models\Tache;
 use Illuminate\Http\Request;
 
@@ -9,31 +10,28 @@ class TacheController extends Controller
 {
     public function index()
     {
-        $taches = auth()->user()->taches()->orderBy('created_at', 'desc')->get();
-        return view('taches', ['taches' => $taches]);
+        $listes = auth()->user()->listes()->with('taches')->get();
+        return view('taches', ['listes' => $listes]);
     }
 
     public function store(Request $request)
     {
-        $request->validate(['description' => 'required|string|max:255']);
-
-        $tache = auth()->user()->taches()->create([
-            'titre'         => $request->description,
-            'date_echeance' => $request->date_echeance ?? now()->toDateString(),
-            'statut'        => 'todo',
-            'completee'     => false,
+        $request->validate([
+            'description' => 'required|string|max:255',
+            'liste_id'    => 'required|exists:listes,id',
         ]);
 
-        // Si c'est une requête AJAX (page tâches), on retourne du JSON
-        if ($request->expectsJson()) {
-            return response()->json($tache);
-        }
+        $liste = Liste::findOrFail($request->liste_id);
+        abort_if($liste->user_id !== auth()->id(), 403);
 
-        // Sinon (formulaire du calendrier), on redirige vers le calendrier
-        return redirect()->route('calendrier', [
-            'mois'  => now()->month,
-            'annee' => now()->year,
-        ])->with('success', 'Tâche ajoutée !');
+        $tache = auth()->user()->taches()->create([
+            'liste_id'    => $request->liste_id,
+            'description' => $request->description,
+            'start_date'  => now(),
+            'completee'   => false,
+        ]);
+
+        return response()->json($tache);
     }
 
     public function toggle(Tache $tache)

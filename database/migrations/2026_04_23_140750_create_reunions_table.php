@@ -9,6 +9,7 @@ return new class extends Migration
     // up() = ce qu'on fait quand on lance la migration
     public function up(): void
     {
+        if (Schema::hasTable('reunions')) return;
         Schema::create('reunions', function (Blueprint $table) {
             $table->id();                          // colonne id auto-incrémentée
             $table->string('titre');               // texte court

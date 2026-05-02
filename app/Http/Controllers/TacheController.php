@@ -11,7 +11,7 @@ class TacheController extends Controller
     public function index()
     {
         $listes = auth()->user()->listes()->with('taches')->get();
-        return view('taches', ['listes' => $listes]);
+        return view('tache', ['listes' => $listes]);
     }
 
     public function store(Request $request)

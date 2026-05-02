@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Tâches</title>
-    <link rel="stylesheet" href="/css/taches.css">
+    <link rel="stylesheet" href="/css/style_tache.css">
 </head>
 <body>
     @include('header')

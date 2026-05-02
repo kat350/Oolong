@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Hachi+Maru+Pop&family=Handlee&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style_header.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style_connexion.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style_inscription.css') }}">
     <title>Inscription – Oolong</title>
 </head>
 <body>

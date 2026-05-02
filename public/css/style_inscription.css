@@ -1,0 +1,114 @@
+*, ::before, ::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgba(255, 245, 227, 1);
+    font-family: 'Indie Flower', cursive;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.connexion-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.connexion-card {
+    background-color: #FFEAB9;
+    border-radius: 28px;
+    padding: 45px 60px 50px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(120, 80, 30, 0.1);
+}
+
+.connexion-titre {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #5C3A1E;
+    font-family: 'Hachi Maru Pop', cursive;
+    margin-bottom: 35px;
+}
+
+.form-groupe {
+    margin-bottom: 28px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Handlee', cursive;
+    font-size: 1.6rem;
+    color: #5C3A1E;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.form-label .feuille {
+    font-size: 1.4rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 18px;
+    background-color: #D9CDB8;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.1rem;
+    color: #5C3A1E;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: rgba(92, 58, 30, 0.5);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #B07848;
+    color: #FFF5E3;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.4rem;
+    cursor: pointer;
+    margin-top: 28px;
+    transition: background-color 0.2s;
+}
+
+.btn-submit:hover {
+    background-color: #8B5E35;
+}
+
+.lien-inscription {
+    display: block;
+    text-align: center;
+    font-family: 'Indie Flower', cursive;
+    color: #5C3A1E;
+    font-size: 1.1rem;
+    margin-top: 18px;
+    text-decoration: none;
+}
+
+.lien-inscription:hover {
+    text-decoration: underline;
+}
+
+.erreur {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}

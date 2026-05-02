@@ -6,11 +6,12 @@ use App\Http\Controllers\CalendrierController;
 use App\Http\Controllers\ReunionsController;
 use App\Http\Controllers\ListeController;
 use App\Http\Controllers\TacheController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', fn() => view('welcome'));
+Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/header',  fn() => view('header'))->name('header');
-Route::get('/welcome', fn() => view('welcome'))->name('welcome');
+Route::get('/welcome', [HomeController::class, 'index'])->name('welcome');
 Route::get('/footer',  fn() => view('footer'))->name('footer');
 
 // Auth

@@ -14,7 +14,7 @@ body {
 }
 
 .taches-container {
-    background-color: rgba(169, 127, 100, 1);
+    background-color: #8a6640;
     border-radius: 18px;
     padding: 30px 35px 40px 35px;
     width: 340px;
@@ -59,6 +59,9 @@ body {
     align-items: flex-start;
     gap: 18px;
     margin-bottom: 22px;
+    border-radius: 8px;
+    padding: 2px 4px;
+    transition: background-color 1.5s ease;
 }
 
 .tache-item input[type="checkbox"],
@@ -250,4 +253,19 @@ body {
 .form-nouvelle-liste-boutons {
     display: flex;
     gap: 12px;
+}
+
+.taches-du-jour {
+    background-color: #8a6640;
+    border: 3px solid #7A5230;
+}
+
+.taches-vides {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.tache-item.tache-nouveau {
+    background-color: rgba(138, 102, 64, 0.8);
 }

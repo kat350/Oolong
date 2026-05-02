@@ -20,7 +20,7 @@
         
         @else 
         <p>gate 0</p>
-            @foreach $reunion in $reunions 
+            @foreach $reunion in $reunions
                 <article class="cartes-renunion">
                     <h2><!--CODE PHP pour le nom de la réunion-->SUJET</h2>
                     <h3><!--CODE PHP pour la date de la réunion-->03/04</h3>

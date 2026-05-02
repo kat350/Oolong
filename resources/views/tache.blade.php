@@ -13,6 +13,41 @@
 
     <div class="listes-wrapper">
 
+        <!-- Bloc Tâches du jour (permanent, non supprimable) -->
+        <div class="taches-container taches-du-jour">
+            <div class="liste-header">
+                <p class="taches-titre">Tâches du jour</p>
+            </div>
+
+            <!-- Ligne ajouter une tâche du jour -->
+            <div class="tache-item">
+                <button class="btn-ajouter" id="btn-ajouter-jour" onclick="ouvrirAjoutJour()">+</button>
+                <div class="tache-zone-texte">
+                    <span class="tache-label" id="label-ajouter-jour">Ajouter une tâche</span>
+                    <input type="text" class="input-nouvelle-tache" id="input-nouvelle-tache-jour"
+                           placeholder="Nom de la tâche..."
+                           onkeydown="if(event.key==='Enter') confirmerAjoutJour()"
+                           style="display:none;">
+                </div>
+                <button class="btn-confirmer" id="btn-confirmer-jour" onclick="confirmerAjoutJour()" style="display:none;">✓</button>
+            </div>
+
+            <div id="liste-du-jour">
+                @forelse($tachesduJour as $tache)
+                <div class="tache-item" data-id="{{ $tache->id }}">
+                    <input type="checkbox"
+                           id="tache-jour-{{ $tache->id }}"
+                           {{ $tache->completee ? 'checked' : '' }}
+                           onchange="toggleTache({{ $tache->id }}, this)">
+                    <label class="tache-label" for="tache-jour-{{ $tache->id }}">{{ $tache->description }}</label>
+                    <button class="btn-supprimer" onclick="supprimerTache({{ $tache->id }}, this)">×</button>
+                </div>
+                @empty
+                <p class="taches-vides">Aucune tâche pour aujourd'hui.</p>
+                @endforelse
+            </div>
+        </div>
+
         @foreach($listes as $liste)
         <div class="taches-container" data-liste-id="{{ $liste->id }}">
             <div class="liste-header">
@@ -97,13 +132,14 @@
                     const tache = await res.json();
                     const conteneur = document.getElementById('liste-' + listeId);
                     const div = document.createElement('div');
-                    div.className = 'tache-item';
+                    div.className = 'tache-item tache-nouveau';
                     div.dataset.id = tache.id;
                     div.innerHTML =
                         '<input type="checkbox" id="tache-' + tache.id + '" onchange="toggleTache(' + tache.id + ', this)">' +
                         '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.description) + '</label>' +
                         '<button class="btn-supprimer" onclick="supprimerTache(' + tache.id + ', this)">×</button>';
                     conteneur.prepend(div);
+                    requestAnimationFrame(() => div.classList.remove('tache-nouveau'));
                 }
             }
 
@@ -212,6 +248,53 @@
                 formElem.style.display = 'none';
                 carteElem.style.display = 'flex';
             }
+        }
+
+        function ouvrirAjoutJour() {
+            document.getElementById('label-ajouter-jour').style.display = 'none';
+            document.getElementById('input-nouvelle-tache-jour').style.display = 'block';
+            document.getElementById('btn-confirmer-jour').style.display = 'flex';
+            document.getElementById('btn-ajouter-jour').style.display = 'none';
+            document.getElementById('input-nouvelle-tache-jour').focus();
+        }
+
+        async function confirmerAjoutJour() {
+            const input = document.getElementById('input-nouvelle-tache-jour');
+            const texte = input.value.trim();
+
+            if (texte !== '') {
+                const res = await fetch('/taches', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ description: texte, liste_id: null }),
+                });
+
+                if (res.ok) {
+                    const tache = await res.json();
+                    const conteneur = document.getElementById('liste-du-jour');
+                    const vide = conteneur.querySelector('.taches-vides');
+                    if (vide) vide.remove();
+                    const div = document.createElement('div');
+                    div.className = 'tache-item tache-nouveau';
+                    div.dataset.id = tache.id;
+                    div.innerHTML =
+                        '<input type="checkbox" id="tache-jour-' + tache.id + '" onchange="toggleTache(' + tache.id + ', this)">' +
+                        '<label class="tache-label" for="tache-jour-' + tache.id + '">' + escapeHtml(tache.description) + '</label>' +
+                        '<button class="btn-supprimer" onclick="supprimerTache(' + tache.id + ', this)">×</button>';
+                    conteneur.prepend(div);
+                    requestAnimationFrame(() => div.classList.remove('tache-nouveau'));
+                }
+            }
+
+            input.value = '';
+            input.style.display = 'none';
+            document.getElementById('btn-confirmer-jour').style.display = 'none';
+            document.getElementById('btn-ajouter-jour').style.display = 'flex';
+            document.getElementById('label-ajouter-jour').style.display = 'block';
         }
 
         function escapeHtml(text) {

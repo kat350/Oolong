@@ -11,18 +11,23 @@ class TacheController extends Controller
     public function index()
     {
         $listes = auth()->user()->listes()->with('taches')->get();
-        return view('tache', ['listes' => $listes]);
+        $tachesduJour = auth()->user()->taches()
+            ->whereDate('start_date', today())
+            ->get();
+        return view('tache', ['listes' => $listes, 'tachesduJour' => $tachesduJour]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'description' => 'required|string|max:255',
-            'liste_id'    => 'required|exists:listes,id',
+            'liste_id'    => 'nullable|exists:listes,id',
         ]);
 
-        $liste = Liste::findOrFail($request->liste_id);
-        abort_if($liste->user_id !== auth()->id(), 403);
+        if ($request->liste_id) {
+            $liste = Liste::findOrFail($request->liste_id);
+            abort_if($liste->user_id !== auth()->id(), 403);
+        }
 
         $tache = auth()->user()->taches()->create([
             'liste_id'    => $request->liste_id,

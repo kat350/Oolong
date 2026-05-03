@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Calendrier</title>
     <style>
         
@@ -153,6 +154,25 @@
         .event.tache {
             background: var(--tache-color);
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .btn-suppr-event {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .btn-suppr-event:hover {
+            color: #fff;
         }
 
         /* ===== BOUTON AJOUTER ===== */
@@ -338,8 +358,9 @@
                     {{-- Tâches du jour --}}
                     @if(isset($taches[$dateStr]))
                         @foreach($taches[$dateStr] as $t)
-                            <div class="event tache" title="{{ $t->titre }}">
+                            <div class="event tache" title="{{ $t->titre }}" id="tache-cal-{{ $t->id }}">
                                 ✅ {{ $t->titre }}
+                                <button class="btn-suppr-event" onclick="event.stopPropagation(); supprimerTacheCal({{ $t->id }})" title="Supprimer">×</button>
                             </div>
                         @endforeach
                     @endif
@@ -441,6 +462,21 @@
     
         // ===== ONGLETS RÉUNION / TÂCHE =====
     
+        async function supprimerTacheCal(id) {
+            const res = await fetch('/taches/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        ? document.querySelector('meta[name="csrf-token"]').content
+                        : '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+            });
+            if (res.ok) {
+                document.getElementById('tache-cal-' + id).remove();
+            }
+        }
+
         function switchTab(type) {
             const formReunion = document.getElementById('form-reunion');
             const formTache   = document.getElementById('form-tache');

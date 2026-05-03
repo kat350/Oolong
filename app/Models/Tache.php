@@ -19,6 +19,7 @@ class Tache extends Model{
         'titre',
         'description',
         'date_echeance',
+        'statut',
         'completee',
     ];
 

@@ -20,9 +20,22 @@ class TacheController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'description' => 'required|string|max:255',
-            'liste_id'    => 'nullable|exists:listes,id',
+            'titre'         => 'nullable|string|max:255',
+            'description'   => 'nullable|string|max:255',
+            'liste_id'      => 'nullable|exists:listes,id',
+            'date_echeance' => 'nullable|date',
+            'statut'        => 'nullable|in:todo,en_cours,terminee',
         ]);
+
+        // La page tâches envoie 'description', le calendrier envoie 'titre'
+        $titre = $request->titre ?? $request->description;
+
+        if (!$titre) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Le titre est requis.'], 422);
+            }
+            return back()->withErrors(['titre' => 'Le titre est requis.']);
+        }
 
         if ($request->liste_id) {
             $liste = Liste::findOrFail($request->liste_id);
@@ -31,13 +44,23 @@ class TacheController extends Controller
 
         $tache = auth()->user()->taches()->create([
             'liste_id'      => $request->liste_id,
-            'titre'         => $request->description,
+            'titre'         => $titre,
             'description'   => $request->description,
-            'date_echeance' => today(),
+            'date_echeance' => $request->date_echeance ?? today(),
+            'statut'        => $request->statut ?? 'todo',
             'completee'     => false,
         ]);
 
-        return response()->json($tache);
+        // Requête JSON (page tâches via fetch) → retourne JSON
+        if ($request->expectsJson()) {
+            return response()->json($tache);
+        }
+
+        // Formulaire classique (page calendrier) → redirige vers le bon mois
+        return redirect()->route('calendrier', [
+            'mois'  => \Carbon\Carbon::parse($tache->date_echeance)->month,
+            'annee' => \Carbon\Carbon::parse($tache->date_echeance)->year,
+        ])->with('success', 'Tâche ajoutée !');
     }
 
     public function toggle(Tache $tache)

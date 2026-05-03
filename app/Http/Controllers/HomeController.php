@@ -32,7 +32,7 @@ class HomeController extends Controller
         $debutSemaine = Carbon::now()->startOfWeek(); // lundi
         $finSemaine   = Carbon::now()->endOfWeek();   // dimanche
 
-        $evenements = Calendrier::where('user_id', $userId)
+        $eventsCalendrier = Calendrier::where('user_id', $userId)
             ->where(function ($q) use ($debutSemaine, $finSemaine) {
                 $q->whereBetween('date_debut', [$debutSemaine, $finSemaine])
                   ->orWhereBetween('date_fin',  [$debutSemaine, $finSemaine]);
@@ -41,11 +41,26 @@ class HomeController extends Controller
             ->get()
             ->map(function ($ev) {
                 return [
-                    'label'      => $ev->titre,
-                    'dayOfWeek'  => Carbon::parse($ev->date_debut)->dayOfWeek, // 0=Di, 1=Lu...
-                    'hour'       => (int) Carbon::parse($ev->date_debut)->format('H'),
+                    'label'     => $ev->titre,
+                    'dayOfWeek' => Carbon::parse($ev->date_debut)->dayOfWeek,
+                    'hour'      => (int) Carbon::parse($ev->date_debut)->format('H'),
+                    'type'      => 'event',
                 ];
             });
+
+        $eventsTaches = Tache::where('user_id', $userId)
+            ->whereBetween('date_echeance', [$debutSemaine, $finSemaine])
+            ->get()
+            ->map(function ($t) {
+                return [
+                    'label'     => $t->titre,
+                    'dayOfWeek' => Carbon::parse($t->date_echeance)->dayOfWeek,
+                    'hour'      => 8,
+                    'type'      => 'tache',
+                ];
+            });
+
+        $evenements = $eventsCalendrier->concat($eventsTaches);
 
         return view('welcome', compact('reunions', 'taches', 'evenements'));
     }

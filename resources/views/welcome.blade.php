@@ -16,7 +16,7 @@
 
     body {
         font-family: 'Nunito', sans-serif;
-        background-color: var(--beige-pale);
+        background-color: rgba(255, 245, 227, 1);
         color: var(--text-dark);
     }
 
@@ -83,6 +83,47 @@
     }
 
     .task-check { color: #7A9E7E; }
+
+    .task-item input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        background-color: var(--beige-warm);
+        border: 1.5px solid var(--brown-light);
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .task-item input[type="checkbox"]:checked {
+        background-color: #7A9E7E;
+        border-color: #7A9E7E;
+    }
+
+    .task-item input[type="checkbox"]:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+
+    .task-item label {
+        cursor: pointer;
+        flex: 1;
+        margin-left: 8px;
+    }
+
+    .task-item input[type="checkbox"]:checked + label {
+        text-decoration: line-through;
+        opacity: 0.6;
+    }
 
     .task-empty {
         font-size: 0.82rem;
@@ -210,6 +251,10 @@
         text-overflow: ellipsis;
     }
 
+    .tache-chip {
+        background: #7A9E7E;
+    }
+
     .calendrier-section .btn-voir { background: var(--beige-pale); border-color: var(--beige-card); color: var(--brown-mid); }
 </style>
 
@@ -218,12 +263,15 @@
     {{-- Tâches + Bienvenue --}}
     <div class="welcome-banner">
         <div class="section-card taches-card">
-            <div class="section-title">🌿 Tâches du jour :</div>
+            <div class="section-title"><img src="{{ asset('img/feuille_logo_mini.png') }}" alt="" style="width:20px;height:auto;vertical-align:middle;"> Tâches du jour :</div>
 
             @forelse ($taches as $tache)
                 <div class="task-item">
-                    <span>{{ $tache->titre }}</span>
-                    <span class="task-check">✔</span>
+                    <input type="checkbox"
+                           id="wtache-{{ $tache->id }}"
+                           {{ $tache->completee ? 'checked' : '' }}
+                           onchange="toggleTache({{ $tache->id }}, this)">
+                    <label for="wtache-{{ $tache->id }}">{{ $tache->titre }}</label>
                 </div>
             @empty
                 <p class="task-empty">Aucune tâche pour aujourd'hui</p>
@@ -243,7 +291,7 @@
 
     {{-- Réunions du jour --}}
     <div class="reunions-section">
-        <div class="section-title">🌿 Reunions du jour :</div>
+        <div class="section-title"><img src="{{ asset('img/feuille_logo_mini.png') }}" alt="" style="width:20px;height:auto;vertical-align:middle;"> Reunions du jour :</div>
 
         @if ($reunions->isEmpty())
             <p class="reunion-empty">Aucune réunion aujourd'hui</p>
@@ -328,7 +376,7 @@
             EVENTS.forEach(ev => {
                 if (ev.dayOfWeek === d.getDay() && ev.hour === h) {
                     const chip = document.createElement('div');
-                    chip.className = 'event-chip';
+                    chip.className = 'event-chip' + (ev.type === 'tache' ? ' tache-chip' : '');
                     chip.textContent = ev.label;
                     cell.appendChild(chip);
                 }
@@ -338,6 +386,26 @@
     });
     cal.appendChild(body);
 })();
+</script>
+
+<script>
+    async function toggleTache(id, checkbox) {
+        await fetch('/taches/' + id, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        });
+        const label = checkbox.nextElementSibling;
+        if (checkbox.checked) {
+            label.style.textDecoration = 'line-through';
+            label.style.opacity = '0.6';
+        } else {
+            label.style.textDecoration = 'none';
+            label.style.opacity = '1';
+        }
+    }
 </script>
 
 @include('footer')

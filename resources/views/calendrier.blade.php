@@ -31,6 +31,10 @@
             padding: 0px;
         }
 
+        footer {
+            background-color: rgba(255, 245, 227, 1) !important;
+        }
+
         h1 {
             color: var(--text-dark);
             font-size: 2rem;

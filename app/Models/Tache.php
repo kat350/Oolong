@@ -16,14 +16,14 @@ class Tache extends Model{
     protected $fillable = [
         'user_id',
         'liste_id',
+        'titre',
         'description',
-        'start_date',
+        'date_echeance',
         'completee',
     ];
 
     protected $casts = [
         'completee' => 'boolean',
-        'start_date' => 'datetime',
     ];
 
     public function user()

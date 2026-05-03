@@ -12,7 +12,7 @@ class TacheController extends Controller
     {
         $listes = auth()->user()->listes()->with('taches')->get();
         $tachesduJour = auth()->user()->taches()
-            ->whereDate('start_date', today())
+            ->whereDate('created_at', today())
             ->get();
         return view('tache', ['listes' => $listes, 'tachesduJour' => $tachesduJour]);
     }
@@ -30,10 +30,11 @@ class TacheController extends Controller
         }
 
         $tache = auth()->user()->taches()->create([
-            'liste_id'    => $request->liste_id,
-            'description' => $request->description,
-            'start_date'  => now(),
-            'completee'   => false,
+            'liste_id'      => $request->liste_id,
+            'titre'         => $request->description,
+            'description'   => $request->description,
+            'date_echeance' => today(),
+            'completee'     => false,
         ]);
 
         return response()->json($tache);

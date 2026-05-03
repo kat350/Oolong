@@ -27,12 +27,16 @@ class CalendrierController extends Controller
         $reunions = Reunion::where('user_id', auth()->id())
                    ->whereBetween('date_reunion', [$debutMois, $finMois])
                    ->get()
-                   ->groupBy('date_reunion');
+                   ->groupBy(function($reunion) {
+                       return \Carbon\Carbon::parse($reunion->date_reunion)->format('Y-m-d');
+                   });
         // On récupère toutes les tâches du mois
         $taches = Tache::where('user_id', auth()->id())
                ->whereBetween('date_echeance', [$debutMois, $finMois])
                ->get()
-               ->groupBy('date_echeance');
+               ->groupBy(function($tache) {
+                   return \Carbon\Carbon::parse($tache->date_echeance)->format('Y-m-d');
+               });
 
         // On passe tout à la vue
         return view('calendrier', [

@@ -67,6 +67,7 @@ body {
 .tache-item input[type="checkbox"],
 .tache-item .btn-ajouter,
 .tache-item .btn-confirmer,
+.tache-item .btn-echeance,
 .tache-item .btn-supprimer {
     margin-top: 4px;
     flex-shrink: 0;
@@ -137,6 +138,57 @@ body {
     flex: 1;
     display: flex;
     align-items: center;
+}
+
+.btn-echeance {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background-color: #E8DECE;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #7A5230;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.echeance-popup {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 36px;
+    background: #5c3d1e;
+    border: 1.5px solid rgba(232, 222, 206, 0.35);
+    border-radius: 10px;
+    padding: 12px 14px;
+    z-index: 20;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.echeance-popup label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+}
+
+.echeance-popup input[type="date"] {
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid rgba(232, 222, 206, 0.5);
+    color: #fff;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1rem;
+    outline: none;
+    padding: 2px 4px;
+    color-scheme: dark;
+    cursor: pointer;
 }
 
 .input-nouvelle-tache {

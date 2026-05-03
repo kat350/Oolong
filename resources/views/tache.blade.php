@@ -39,7 +39,7 @@
                            id="tache-jour-{{ $tache->id }}"
                            {{ $tache->completee ? 'checked' : '' }}
                            onchange="toggleTache({{ $tache->id }}, this)">
-                    <label class="tache-label" for="tache-jour-{{ $tache->id }}">{{ $tache->description }}</label>
+                    <label class="tache-label" for="tache-jour-{{ $tache->id }}">{{ $tache->titre }}</label>
                     <button class="btn-supprimer" onclick="supprimerTache({{ $tache->id }}, this)">×</button>
                 </div>
                 @empty
@@ -56,7 +56,7 @@
             </div>
 
             <!-- Ligne ajouter une tâche -->
-            <div class="tache-item">
+            <div class="tache-item" style="position:relative;">
                 <button class="btn-ajouter" id="btn-ajouter-{{ $liste->id }}" onclick="ouvrirAjout({{ $liste->id }})">+</button>
                 <div class="tache-zone-texte">
                     <span class="tache-label" id="label-ajouter-{{ $liste->id }}">Ajouter une tâche</span>
@@ -64,6 +64,11 @@
                            placeholder="Nom de la tâche..."
                            onkeydown="if(event.key==='Enter') confirmerAjout({{ $liste->id }})"
                            style="display:none;">
+                </div>
+                <button class="btn-echeance" id="btn-echeance-{{ $liste->id }}" onclick="toggleDate({{ $liste->id }}, event)" style="display:none;" title="Choisir une échéance"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A5230" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" fill="none"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
+                <div class="echeance-popup" id="echeance-popup-{{ $liste->id }}" style="display:none;">
+                    <label>Échéance</label>
+                    <input type="date" id="input-echeance-{{ $liste->id }}" onchange="fermerPopup({{ $liste->id }})">
                 </div>
                 <button class="btn-confirmer" id="btn-confirmer-{{ $liste->id }}" onclick="confirmerAjout({{ $liste->id }})" style="display:none;">✓</button>
             </div>
@@ -76,7 +81,7 @@
                            id="tache-{{ $tache->id }}"
                            {{ $tache->completee ? 'checked' : '' }}
                            onchange="toggleTache({{ $tache->id }}, this)">
-                    <label class="tache-label" for="tache-{{ $tache->id }}">{{ $tache->description }}</label>
+                    <label class="tache-label" for="tache-{{ $tache->id }}">{{ $tache->titre }}</label>
                     <button class="btn-supprimer" onclick="supprimerTache({{ $tache->id }}, this)">×</button>
                 </div>
                 @endforeach
@@ -108,14 +113,27 @@
         function ouvrirAjout(listeId) {
             document.getElementById('label-ajouter-' + listeId).style.display = 'none';
             document.getElementById('input-nouvelle-tache-' + listeId).style.display = 'block';
+            document.getElementById('btn-echeance-' + listeId).style.display = 'flex';
             document.getElementById('btn-confirmer-' + listeId).style.display = 'flex';
             document.getElementById('btn-ajouter-' + listeId).style.display = 'none';
             document.getElementById('input-nouvelle-tache-' + listeId).focus();
         }
 
+        function toggleDate(listeId, event) {
+            event.stopPropagation();
+            const popup = document.getElementById('echeance-popup-' + listeId);
+            popup.style.display = popup.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function fermerPopup(listeId) {
+            document.getElementById('echeance-popup-' + listeId).style.display = 'none';
+        }
+
         async function confirmerAjout(listeId) {
-            const input = document.getElementById('input-nouvelle-tache-' + listeId);
-            const texte = input.value.trim();
+            const input     = document.getElementById('input-nouvelle-tache-' + listeId);
+            const dateInput = document.getElementById('input-echeance-' + listeId);
+            const texte     = input.value.trim();
+            const date      = dateInput ? dateInput.value : '';
 
             if (texte !== '') {
                 const res = await fetch('/taches', {
@@ -125,7 +143,7 @@
                         'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ description: texte, liste_id: listeId }),
+                    body: JSON.stringify({ description: texte, liste_id: listeId, date_echeance: date || null }),
                 });
 
                 if (res.ok) {
@@ -136,15 +154,19 @@
                     div.dataset.id = tache.id;
                     div.innerHTML =
                         '<input type="checkbox" id="tache-' + tache.id + '" onchange="toggleTache(' + tache.id + ', this)">' +
-                        '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.description) + '</label>' +
+                        '<label class="tache-label" for="tache-' + tache.id + '">' + escapeHtml(tache.titre) + '</label>' +
                         '<button class="btn-supprimer" onclick="supprimerTache(' + tache.id + ', this)">×</button>';
                     conteneur.prepend(div);
                     requestAnimationFrame(() => div.classList.remove('tache-nouveau'));
                 }
             }
 
+            // Réinitialisation
             input.value = '';
             input.style.display = 'none';
+            if (dateInput) { dateInput.value = ''; }
+            document.getElementById('echeance-popup-' + listeId).style.display = 'none';
+            document.getElementById('btn-echeance-' + listeId).style.display = 'none';
             document.getElementById('btn-confirmer-' + listeId).style.display = 'none';
             document.getElementById('btn-ajouter-' + listeId).style.display = 'flex';
             document.getElementById('label-ajouter-' + listeId).style.display = 'block';
@@ -228,7 +250,7 @@
                         <p class="taches-titre">${escapeHtml(liste.nom)}</p>
                         <button class="btn-supprimer-liste" onclick="supprimerListe(${liste.id}, this)">×</button>
                     </div>
-                    <div class="tache-item">
+                    <div class="tache-item" style="position:relative;">
                         <button class="btn-ajouter" id="btn-ajouter-${liste.id}" onclick="ouvrirAjout(${liste.id})">+</button>
                         <div class="tache-zone-texte">
                             <span class="tache-label" id="label-ajouter-${liste.id}">Ajouter une tâche</span>
@@ -236,6 +258,11 @@
                                    placeholder="Nom de la tâche..."
                                    onkeydown="if(event.key==='Enter') confirmerAjout(${liste.id})"
                                    style="display:none;">
+                        </div>
+                        <button class="btn-echeance" id="btn-echeance-${liste.id}" onclick="toggleDate(${liste.id}, event)" style="display:none;" title="Choisir une échéance"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A5230" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" fill="none"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
+                        <div class="echeance-popup" id="echeance-popup-${liste.id}" style="display:none;">
+                            <label>Échéance</label>
+                            <input type="date" id="input-echeance-${liste.id}" onchange="fermerPopup(${liste.id})">
                         </div>
                         <button class="btn-confirmer" id="btn-confirmer-${liste.id}" onclick="confirmerAjout(${liste.id})" style="display:none;">✓</button>
                     </div>
@@ -283,7 +310,7 @@
                     div.dataset.id = tache.id;
                     div.innerHTML =
                         '<input type="checkbox" id="tache-jour-' + tache.id + '" onchange="toggleTache(' + tache.id + ', this)">' +
-                        '<label class="tache-label" for="tache-jour-' + tache.id + '">' + escapeHtml(tache.description) + '</label>' +
+                        '<label class="tache-label" for="tache-jour-' + tache.id + '">' + escapeHtml(tache.titre) + '</label>' +
                         '<button class="btn-supprimer" onclick="supprimerTache(' + tache.id + ', this)">×</button>';
                     conteneur.prepend(div);
                     requestAnimationFrame(() => div.classList.remove('tache-nouveau'));
@@ -302,6 +329,11 @@
             div.appendChild(document.createTextNode(text));
             return div.innerHTML;
         }
+
+        // Fermer tous les popups si on clique ailleurs
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.echeance-popup').forEach(p => p.style.display = 'none');
+        });
     </script>
 
     @include('footer')

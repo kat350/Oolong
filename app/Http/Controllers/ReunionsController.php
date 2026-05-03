@@ -27,7 +27,7 @@ class ReunionsController extends Controller
     {
         // Validation : on vérifie que les données sont correctes
         $request->validate([
-            'sujet'        => 'required|string|max:255',
+            'titre'        => 'required|string|max:255',
             'date_reunion' => 'required|date',
             'heure_debut'  => 'nullable|date_format:H:i',
             'heure_fin'    => 'nullable|date_format:H:i',

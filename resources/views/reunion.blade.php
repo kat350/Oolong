@@ -94,7 +94,7 @@
         @else
             @foreach ($reunions as $reunion)
                 <article class="cartes-reunion">
-                    <h2>{{ $reunion->sujet }}</h2>
+                    <h2>{{ $reunion->titre }}</h2>
                     <h3>{{ \Carbon\Carbon::parse($reunion->date_reunion)->format('d/m/Y') }}</h3>
                     <p>
                         @if($reunion->heure_debut)
@@ -116,8 +116,8 @@
             <form method="POST" action="{{ route('reunions.store') }}">
                 @csrf
 
-                <label for="sujet">Sujet</label>
-                <input id="sujet" name="sujet" type="text" required>
+                <label for="titre">Sujet</label>
+                <input id="titre" name="titre" type="text" required>
 
                 <label for="date_reunion">Date</label>
                 <input id="date_reunion" name="date_reunion" type="date" required>

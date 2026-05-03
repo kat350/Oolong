@@ -9,7 +9,7 @@ class Reunion extends Model
     // $fillable = les colonnes qu'on autorise à remplir en masse
     // (sécurité : évite qu'un utilisateur malveillant modifie des colonnes sensibles)
     protected $fillable = [
-        'sujet',
+        'titre',
         'description',
         'date_reunion',
         'heure_debut',

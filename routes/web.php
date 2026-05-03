@@ -8,10 +8,12 @@ use App\Http\Controllers\ListeController;
 use App\Http\Controllers\TacheController;
 use App\Http\Controllers\HomeController;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::middleware('auth')->group(function () {
+    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/welcome', [HomeController::class, 'index'])->name('welcome');
+});
 
 Route::get('/header',  fn() => view('header'))->name('header');
-Route::get('/welcome', [HomeController::class, 'index'])->name('welcome');
 Route::get('/footer',  fn() => view('footer'))->name('footer');
 
 // Auth
@@ -35,8 +37,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // Réunions
-Route::get('/reunion',  [ReunionsController::class, 'all_reunions'])->name('reunion');
-Route::post('/reunion', [ReunionsController::class, 'storeReunion'])->name('reunions.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/reunion',  [ReunionsController::class, 'all_reunions'])->name('reunion');
+    Route::post('/reunion', [ReunionsController::class, 'storeReunion'])->name('reunions.store');
+});
 
 // Calendrier
 Route::middleware('auth')->group(function () {

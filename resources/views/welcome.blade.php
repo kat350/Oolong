@@ -317,7 +317,7 @@
 
     {{-- Calendrier de la semaine --}}
     <div class="calendrier-section">
-        <div class="section-title">Calendriers</div>
+        <div class="section-title"><img src="{{ asset('img/feuille_logo_mini.png') }}" alt="" style="width:20px;height:auto;vertical-align:middle;"> Calendriers</div>
         <div class="week-calendar" id="weekCalendar"></div>
         <a href="{{ route('calendrier') }}" class="btn-voir">Voir plus</a>
     </div>

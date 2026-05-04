@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reunion – Oolong</title>
     <style>
-        /* ── Variables ── */
+
         :root {
             --beige:      #f5eddc;
             --brun:       #7a5230;
@@ -22,75 +22,6 @@
             font-family: Georgia, 'Times New Roman', serif;
             color: var(--text-dark);
             min-height: 100vh;
-        }
-
-        /* ── Header ── */
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 40px;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 30px;
-            background: #e8d8b8;
-            padding: 10px 30px;
-            border-radius: 30px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: var(--text-mid);
-            font-size: 1.05rem;
-        }
-
-        nav ul li a:hover { color: var(--brun); }
-
-        .logo {
-            font-size: 2rem;
-            font-style: italic;
-            color: var(--brun);
-            font-family: Georgia, serif;
-        }
-
-        .logo span { color: var(--brun-clair); }
-
-        /* ── Barre de recherche ── */
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: white;
-            border-radius: 30px;
-            padding: 8px 18px;
-            gap: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-        }
-
-        .search-bar input {
-            border: none;
-            outline: none;
-            font-size: 0.95rem;
-            background: transparent;
-            width: 180px;
-            color: var(--text-dark);
-        }
-
-        .search-bar button {
-            border: none;
-            background: none;
-            cursor: pointer;
-            color: var(--brun);
-            font-size: 1rem;
-        }
-
-        /* ── Header right group ── */
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 24px;
         }
 
         /* ── Section principale ── */
@@ -318,6 +249,49 @@
         .modal .btn-submit:hover { 
             background: var(--brun-clair);
         }
+
+        /* ── Modal de détails ── */
+        .details-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 32px;
+            width: 500px;
+            max-width: 95vw;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .details-modal h2 {
+            color: var(--brun);
+            margin-bottom: 24px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--brun-clair);
+            padding-bottom: 12px;
+        }
+        .details-modal .detail-row {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8d8b8;
+        }
+        .details-modal .detail-row:last-of-type {
+            border-bottom: none;
+        }
+        .details-modal .detail-label {
+            font-weight: 600;
+            color: var(--text-mid);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        .details-modal .detail-value {
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+        .details-modal .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 24px;
+            border-top: 1px solid #e8d8b8;
+            padding-top: 16px;
+        }
     </style>
 </head>
 <body>
@@ -358,7 +332,7 @@
                             <span class="auteur">{{ $reunion->user->name }}</span>
 
                             <button class="voir"
-                                    onclick="alert('{{ addslashes($reunion->description ?? 'Pas de description.') }}')">
+                                    onclick="ouvrirDetailsModal('{{ $reunion->titre }}', '{{ $reunion->date_reunion->format('d/m/Y') }}', '{{ $reunion->heure_format }}', '{{ $reunion->user->name }}', '{{ addslashes($reunion->description ?? 'Pas de description.') }}')">
                                 voir
                             </button>
 
@@ -428,7 +402,40 @@
             </div>
         </div>
 
+        {{-- MODAL DE DÉTAILS --}}
+        <div class="modal-overlay" id="detailsModal">
+            <div class="details-modal">
+                <h2 id="detailTitre"></h2>
+
+                <div class="detail-row">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value" id="detailDate"></div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Heure</div>
+                    <div class="detail-value" id="detailHeure"></div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Créateur</div>
+                    <div class="detail-value" id="detailAuteur"></div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Description</div>
+                    <div class="detail-value" id="detailDescription"></div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-close" onclick="fermerDetailsModal()">Fermer</button>
+                </div>
+            </div>
+        </div>
+
     </main>
+
+    @include('footer')
 
     <script>
         function ouvrirModal() {
@@ -446,10 +453,32 @@
             }
         });
 
+        // Fermer le modal de détails en cliquant sur le fond
+        document.getElementById('detailsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                fermerDetailsModal();
+            }
+        });
+
+        // Fonctions pour le modal de détails
+        function ouvrirDetailsModal(titre, date, heure, auteur, description) {
+            document.getElementById('detailTitre').textContent = titre;
+            document.getElementById('detailDate').textContent = date;
+            document.getElementById('detailHeure').textContent = heure;
+            document.getElementById('detailAuteur').textContent = auteur;
+            document.getElementById('detailDescription').textContent = description;
+            document.getElementById('detailsModal').classList.add('actif');
+        }
+
+        function fermerDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('actif');
+        }
+
         // Fermer le modal avec Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 fermerModal();
+                fermerDetailsModal();
             }
         });
     </script>

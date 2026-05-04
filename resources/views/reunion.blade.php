@@ -323,28 +323,7 @@
 <body>
 
     <!-- En-tête -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Calendriers</a></li>
-                <li><a href="#">Tâches</a></li>
-                <li><a href="{{ route('reunion') }}">Reunions</a></li>
-            </ul>
-        </nav>
-
-        <div class="header-right">
-            <!-- Barre de filtre -->
-            <form action="{{ route('reunion') }}" method="GET" class="search-bar">
-                <input type="text"
-                       name="filtre"
-                       placeholder="Filtre"
-                       value="{{ request('filtre') }}">
-                <button type="submit">🔍</button>
-            </form>
-
-            <div class="logo">&#x1F343;<span>olong</span></div>
-        </div>
-    </header>
+    @include('header')
 
     <main>
 

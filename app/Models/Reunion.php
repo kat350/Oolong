@@ -15,6 +15,10 @@ class Reunion extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'date_reunion' => 'date',
+    ];
+
     // Relation avec l'utilisateur qui a créé la réunion
     public function user()
     {

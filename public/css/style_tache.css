@@ -1,9 +1,11 @@
+/* fond de la page */
 body {
     background-color: rgba(255, 245, 227, 1);
     font-family: 'Indie Flower', cursive;
     margin: 0;
 }
 
+/* affiche toutes les listes a coté des 1 des autres */
 .listes-wrapper {
     display: flex;
     flex-direction: row;
@@ -13,6 +15,7 @@ body {
     align-items: flex-start;
 }
 
+/* bloc d'une liste (en marron) */
 .taches-container {
     background-color: #8a6640;
     border-radius: 18px;
@@ -22,6 +25,7 @@ body {
     flex-shrink: 0;
 }
 
+/* en-tete de liste : nom et bouton supprimer */
 .liste-header {
     display: flex;
     justify-content: space-between;
@@ -30,6 +34,7 @@ body {
     gap: 8px;
 }
 
+/* nom de la liste */
 .taches-titre {
     color: #F5DEB3;
     font-size: 1.8rem;
@@ -39,6 +44,7 @@ body {
     min-width: 0;
 }
 
+/* bouton supprimer liste */
 .btn-supprimer-liste {
     background: none;
     border: none;
@@ -54,6 +60,7 @@ body {
     color: #F5DEB3;
 }
 
+/* checkbox label bouton supprimer */
 .tache-item {
     display: flex;
     align-items: flex-start;
@@ -64,6 +71,7 @@ body {
     transition: background-color 1.5s ease;
 }
 
+/* aligne boutons même ligne que texte */
 .tache-item input[type="checkbox"],
 .tache-item .btn-ajouter,
 .tache-item .btn-confirmer,
@@ -73,6 +81,7 @@ body {
     flex-shrink: 0;
 }
 
+/* case a cocher */
 .tache-item input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
@@ -86,10 +95,12 @@ body {
     transition: background-color 0.2s;
 }
 
+/* case quand cochee */
 .tache-item input[type="checkbox"]:checked {
     background-color: #D4B896;
 }
 
+/* symbole check quand case est cochee */
 .tache-item input[type="checkbox"]:checked::after {
     content: '✓';
     position: absolute;
@@ -101,6 +112,7 @@ body {
     font-weight: bold;
 }
 
+/* texte de la tache */
 .tache-label {
     color: #FFFFFF;
     font-size: 1.5rem;
@@ -112,11 +124,13 @@ body {
     min-width: 0;
 }
 
+/* texte barre quand tache cochee */
 .tache-item input[type="checkbox"]:checked + .tache-label {
     text-decoration: line-through;
     opacity: 0.7;
 }
 
+/* bouton pour ouvrir champ pour ajouter */
 .btn-ajouter {
     width: 28px;
     height: 28px;
@@ -134,12 +148,14 @@ body {
     font-family: 'Indie Flower', cursive;
 }
 
+/* zone contient label ou input */
 .tache-zone-texte {
     flex: 1;
     display: flex;
     align-items: center;
 }
 
+/* bouton icone calendrier pr choisir date */
 .btn-echeance {
     width: 28px;
     height: 28px;
@@ -158,6 +174,7 @@ body {
     font-family: sans-serif;
 }
 
+/* popup selection date */
 .echeance-popup {
     position: absolute;
     top: calc(100% + 6px);
@@ -178,6 +195,7 @@ body {
     color: rgba(255,255,255,0.6);
 }
 
+/* champ date popup */
 .echeance-popup input[type="date"] {
     background: transparent;
     border: none;
@@ -191,6 +209,7 @@ body {
     cursor: pointer;
 }
 
+/* champ texte nom nouvelle tache */
 .input-nouvelle-tache {
     width: 100%;
     background-color: transparent;
@@ -207,6 +226,7 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
+/* bouton chek valider ajout */
 .btn-confirmer {
     width: 28px;
     height: 28px;
@@ -223,6 +243,7 @@ body {
     justify-content: center;
 }
 
+/* bouton croix supprimer tache */
 .btn-supprimer {
     margin-left: auto;
     background: none;
@@ -240,6 +261,7 @@ body {
     color: #FFFFFF;
 }
 
+/* carte creer nouvelle liste */
 .carte-nouvelle-liste {
     background-color: #F2E4CB;
     border: none;
@@ -259,6 +281,7 @@ body {
     background-color: rgba(240, 228, 210, 1);
 }
 
+/* icone centre carte nouvelle liste */
 .carte-nouvelle-liste-icone {
     width: 60px;
     height: 60px;
@@ -272,6 +295,7 @@ body {
     font-weight: 300;
 }
 
+/* formulaire creation nouvelle liste */
 .form-nouvelle-liste {
     background-color: rgba(169, 127, 100, 1);
     border-radius: 18px;
@@ -285,6 +309,7 @@ body {
     gap: 20px;
 }
 
+/* champ texte nom nouvelle liste */
 .input-nom-liste {
     width: 100%;
     background-color: transparent;
@@ -302,22 +327,26 @@ body {
     color: rgba(245, 222, 179, 0.5);
 }
 
+/* boutons confirmer/annuler dans formulaire liste */
 .form-nouvelle-liste-boutons {
     display: flex;
     gap: 12px;
 }
 
+/* bloc taches du jour avc bordure */
 .taches-du-jour {
     background-color: #8a6640;
     border: 3px solid #7A5230;
 }
 
+/* message affiche quand zero tache */
 .taches-vides {
     color: rgba(255, 255, 255, 0.5);
     font-size: 1.2rem;
     margin: 0;
 }
 
+/* apparition nouvelle tache quand elle est ajoutée */
 .tache-item.tache-nouveau {
     background-color: rgba(138, 102, 64, 0.8);
 }

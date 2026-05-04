@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+/* fond de la page */
 body {
     background-color: rgba(255, 245, 227, 1);
     font-family: 'Indie Flower', cursive;
@@ -12,6 +13,7 @@ body {
     flex-direction: column;
 }
 
+/* zone qui centre la carte */
 .connexion-wrapper {
     flex: 1;
     display: flex;
@@ -20,6 +22,7 @@ body {
     padding: 40px 20px;
 }
 
+/* carte blanche du formulaire */
 .connexion-card {
     background-color: #FFEAB9;
     border-radius: 28px;
@@ -29,6 +32,7 @@ body {
     box-shadow: 0 4px 20px rgba(120, 80, 30, 0.1);
 }
 
+/* titre Connexion en haut de la carte */
 .connexion-titre {
     text-align: center;
     font-size: 2.8rem;
@@ -37,10 +41,12 @@ body {
     margin-bottom: 35px;
 }
 
+/* espacement entre les champs du formulaire */
 .form-groupe {
     margin-bottom: 28px;
 }
 
+/* label au dessus d'un champ */
 .form-label {
     display: flex;
     align-items: center;
@@ -56,6 +62,7 @@ body {
     font-size: 1.4rem;
 }
 
+/* champ de saisie (email mot de passe) */
 .form-input {
     width: 100%;
     padding: 14px 18px;
@@ -72,6 +79,7 @@ body {
     color: rgba(92, 58, 30, 0.5);
 }
 
+/* lien mot de passe oublié  */
 .lien-oublie {
     display: block;
     text-align: center;
@@ -87,6 +95,7 @@ body {
     text-decoration: underline;
 }
 
+/* bouton se connecter */
 .btn-submit {
     width: 100%;
     padding: 14px;
@@ -105,6 +114,7 @@ body {
     background-color: #8B5E35;
 }
 
+/* lien pas encore de compte ? s'inscrire" */
 .lien-inscription {
     display: block;
     text-align: center;
@@ -119,6 +129,7 @@ body {
     text-decoration: underline;
 }
 
+/* bloc rouge d'erreur */
 .erreur {
     background-color: #f8d7da;
     color: #721c24;

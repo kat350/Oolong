@@ -17,7 +17,7 @@ body {
 
 /* bloc d'une liste (en marron) */
 .taches-container {
-    background-color: #8a6640;
+    background-color: #7a5230;
     border-radius: 18px;
     padding: 30px 35px 40px 35px;
     width: 340px;
@@ -335,8 +335,8 @@ body {
 
 /* bloc taches du jour avc bordure */
 .taches-du-jour {
-    background-color: #8a6640;
-    border: 3px solid #7A5230;
+    background-color: #7a5230;
+    border: 3px solid #5c3d1e;
 }
 
 /* message affiche quand zero tache */

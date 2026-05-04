@@ -255,6 +255,78 @@
         background: #7A9E7E;
     }
 
+    .reunion-chip {
+        background: var(--brown-light);
+    }
+
+    /* Modal de détails réunion */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-overlay.actif { display: flex; }
+
+    .reunion-details-modal {
+        background: white;
+        border-radius: 14px;
+        padding: 28px 32px;
+        width: 500px;
+        max-width: 95vw;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    .reunion-details-modal h2 {
+        color: var(--brown-mid);
+        margin-bottom: 24px;
+        font-size: 1.3rem;
+        border-bottom: 2px solid var(--brown-light);
+        padding-bottom: 12px;
+    }
+    .reunion-details-modal .detail-row {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e8d8b8;
+    }
+    .reunion-details-modal .detail-row:last-of-type {
+        border-bottom: none;
+    }
+    .reunion-details-modal .detail-label {
+        font-weight: 600;
+        color: var(--text-mid);
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+    .reunion-details-modal .detail-value {
+        color: var(--text-dark);
+        font-size: 1rem;
+    }
+    .reunion-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 24px;
+        border-top: 1px solid #e8d8b8;
+        padding-top: 16px;
+    }
+    .btn-close-modal {
+        background: #f3f4f6;
+        color: #111827;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+    .btn-close-modal:hover {
+        background: #e5e7eb;
+    }
+
     .calendrier-section .btn-voir { background: var(--beige-pale); border-color: var(--beige-card); color: var(--brown-mid); }
 </style>
 
@@ -306,7 +378,7 @@
                                 – {{ \Carbon\Carbon::parse($reunion->heure_fin)->format('H\hi') }}
                             @endif
                         </div>
-                        <a href="#" class="reunion-voir">voir</a>
+                        <a href="#" class="reunion-voir" onclick="ouvrirDetailsReunion('{{ $reunion->titre }}', '{{ $reunion->date_reunion->format('d/m/Y') }}', '{{ $reunion->heure_format }}', '{{ $reunion->user->name }}', '{{ addslashes($reunion->description ?? 'Pas de description.') }}'); return false;">voir</a>
                     </div>
                 @endforeach
             </div>
@@ -322,6 +394,37 @@
         <a href="{{ route('calendrier') }}" class="btn-voir">Voir plus</a>
     </div>
 
+    {{-- MODAL DE DÉTAILS RÉUNION --}}
+    <div class="modal-overlay" id="detailsReunionModal">
+        <div class="reunion-details-modal">
+            <h2 id="detailReunionTitre"></h2>
+
+            <div class="detail-row">
+                <div class="detail-label">Date</div>
+                <div class="detail-value" id="detailReunionDate"></div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Heure</div>
+                <div class="detail-value" id="detailReunionHeure"></div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Créateur</div>
+                <div class="detail-value" id="detailReunionAuteur"></div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Description</div>
+                <div class="detail-value" id="detailReunionDescription"></div>
+            </div>
+
+            <div class="reunion-modal-actions">
+                <button type="button" class="btn-close-modal" onclick="fermerDetailsReunion()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <script>
@@ -331,6 +434,21 @@
 
     // Données injectées depuis HomeController
     const EVENTS = @json($evenements);
+    const REUNIONS_DATA = @json($reunions);
+
+    // Ajouter les réunions au calendrier
+    REUNIONS_DATA.forEach(reunion => {
+        if (reunion.heure_debut) {
+            const date = new Date(reunion.date_reunion);
+            const startHour = parseInt(reunion.heure_debut.split(':')[0]);
+            EVENTS.push({
+                dayOfWeek: date.getDay(),
+                hour: startHour,
+                label: reunion.titre,
+                type: 'reunion'
+            });
+        }
+    });
 
     const today  = new Date();
     const monday = new Date(today);
@@ -376,7 +494,7 @@
             EVENTS.forEach(ev => {
                 if (ev.dayOfWeek === d.getDay() && ev.hour === h) {
                     const chip = document.createElement('div');
-                    chip.className = 'event-chip' + (ev.type === 'tache' ? ' tache-chip' : '');
+                    chip.className = 'event-chip' + (ev.type === 'tache' ? ' tache-chip' : ev.type === 'reunion' ? ' reunion-chip' : '');
                     chip.textContent = ev.label;
                     cell.appendChild(chip);
                 }
@@ -386,6 +504,34 @@
     });
     cal.appendChild(body);
 })();
+
+    // Fonctions pour le modal de détails réunion
+    function ouvrirDetailsReunion(titre, date, heure, auteur, description) {
+        document.getElementById('detailReunionTitre').textContent = titre;
+        document.getElementById('detailReunionDate').textContent = date;
+        document.getElementById('detailReunionHeure').textContent = heure;
+        document.getElementById('detailReunionAuteur').textContent = auteur;
+        document.getElementById('detailReunionDescription').textContent = description;
+        document.getElementById('detailsReunionModal').classList.add('actif');
+    }
+
+    function fermerDetailsReunion() {
+        document.getElementById('detailsReunionModal').classList.remove('actif');
+    }
+
+    // Fermer le modal de détails en cliquant sur le fond
+    document.getElementById('detailsReunionModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            fermerDetailsReunion();
+        }
+    });
+
+    // Fermer le modal avec Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            fermerDetailsReunion();
+        }
+    });
 </script>
 
 <script>

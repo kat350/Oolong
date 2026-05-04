@@ -7,7 +7,7 @@
     <style>
 
         :root {
-            --beige:      #f5eddc;
+            --beige:      rgba(255, 245, 227, 1);
             --brun:       #7a5230;
             --brun-clair: #c49a6c;
             --card-bg:    #fdf3d8;

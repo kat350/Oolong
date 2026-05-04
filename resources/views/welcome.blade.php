@@ -363,7 +363,7 @@
 
     {{-- Réunions du jour --}}
     <div class="reunions-section">
-        <div class="section-title"><img src="{{ asset('img/feuille_logo_mini.png') }}" alt="" style="width:20px;height:auto;vertical-align:middle;"> Reunions du jour :</div>
+        <div class="section-title"><img src="{{ asset('img/feuille_logo_mini.png') }}" alt="" style="width:20px;height:auto;vertical-align:middle;"> Réunions du jour :</div>
 
         @if ($reunions->isEmpty())
             <p class="reunion-empty">Aucune réunion aujourd'hui</p>

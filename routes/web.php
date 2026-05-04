@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/reunion',  [ReunionsController::class, 'all_reunions'])->name('reunion');
     Route::post('/reunion', [ReunionsController::class, 'storeReunion'])->name('reunions.store');
+    Route::delete('/reunion/{reunion}', [ReunionsController::class, 'destroy'])->name('reunions.destroy');
 });
 
 // Calendrier

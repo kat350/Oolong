@@ -8,7 +8,7 @@
     <nav class="nav">
         <ul><a href="/calendrier">Calendrier</a></ul>
         <ul><a href="/taches">Tâches</a></ul>
-        <ul><a href="/reunion">Reunions</a></ul>
+        <ul><a href="/reunion">Réunions</a></ul>
     </nav>
     @else
     <nav class="nav"></nav>

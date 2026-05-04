@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reunion – Oolong</title>
+    <title>Réunion – Oolong</title>
     <style>
 
         :root {
@@ -311,7 +311,7 @@
 
         <!-- Bloc des réunions existantes -->
         <div class="reunions-block">
-            <h2>Reunion :</h2>
+            <h2>Réunion :</h2>
 
             @if($reunions->isEmpty())
                 <p class="empty">Aucune réunion pour le moment.</p>

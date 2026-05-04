@@ -8,15 +8,20 @@ use Illuminate\Http\Request;
 
 class TacheController extends Controller
 {
+    // affiche page des taches
     public function index()
     {
+        // recup listes utilisateur connecté
         $listes = auth()->user()->listes()->with('taches')->get();
+
         $tachesduJour = auth()->user()->taches()
             ->whereDate('created_at', today())
             ->get();
+
         return view('tache', ['listes' => $listes, 'tachesduJour' => $tachesduJour]);
     }
 
+    // add nouvelle tache depuis page tache ou calendrier
     public function store(Request $request)
     {
         $request->validate([
@@ -27,7 +32,7 @@ class TacheController extends Controller
             'statut'        => 'nullable|in:todo,en_cours,terminee',
         ]);
 
-        // La page tâches envoie 'description', le calendrier envoie 'titre'
+        // prend celui qui est rempli pour que les autres pages l'ai, ça synchronise
         $titre = $request->titre ?? $request->description;
 
         if (!$titre) {
@@ -37,6 +42,7 @@ class TacheController extends Controller
             return back()->withErrors(['titre' => 'Le titre est requis.']);
         }
 
+        // verif liste appartient a user connecté
         if ($request->liste_id) {
             $liste = Liste::findOrFail($request->liste_id);
             abort_if($liste->user_id !== auth()->id(), 403);
@@ -46,25 +52,26 @@ class TacheController extends Controller
             'liste_id'      => $request->liste_id,
             'titre'         => $titre,
             'description'   => $request->description,
-            'date_echeance' => $request->date_echeance ?? today(),
+            'date_echeance' => $request->date_echeance ?? today(), // si pas date on met today
             'statut'        => $request->statut ?? 'todo',
             'completee'     => false,
         ]);
 
-        // Requête JSON (page tâches via fetch) → retourne JSON
+        // selon la requete on renvoie ou redirige
         if ($request->expectsJson()) {
             return response()->json($tache);
         }
 
-        // Formulaire classique (page calendrier) → redirige vers le bon mois
         return redirect()->route('calendrier', [
             'mois'  => \Carbon\Carbon::parse($tache->date_echeance)->month,
             'annee' => \Carbon\Carbon::parse($tache->date_echeance)->year,
         ])->with('success', 'Tâche ajoutée !');
     }
 
+    // coche ou decoche la case
     public function toggle(Tache $tache)
     {
+        // verif que c'est ma tache avant de modif
         abort_if($tache->user_id !== auth()->id(), 403);
 
         $tache->update(['completee' => !$tache->completee]);
@@ -72,8 +79,10 @@ class TacheController extends Controller
         return response()->json(['completee' => $tache->completee]);
     }
 
+    // supprime tache
     public function destroy(Tache $tache)
     {
+        // verif que c'ets ma tache
         abort_if($tache->user_id !== auth()->id(), 403);
 
         $tache->delete();

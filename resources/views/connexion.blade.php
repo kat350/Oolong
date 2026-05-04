@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Hachi+Maru+Pop&family=Handlee&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style_header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style_connexion.css') }}">
-    <title>Connexion – Oolong</title>
+    <title>Connexion Oolong</title>
 </head>
 <body>
     @include('header')

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Calendrier</title>
     <style>
-        
+
         :root {
             --bg-brown:    #a07850;
             --bg-cream:    #f5e6c8;
@@ -24,7 +24,7 @@
         .contenu-principal {
             padding: 30px 40px;
         }
-        
+
         body {
             background: var(--bg-brown);
             font-family: 'Segoe UI', sans-serif;
@@ -150,6 +150,10 @@
         .event.reunion {
             background: var(--reunion-color);
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
         }
         .event.tache {
             background: var(--tache-color);
@@ -349,8 +353,9 @@
                     {{-- Réunions du jour --}}
                     @if(isset($reunions[$dateStr]))
                         @foreach($reunions[$dateStr] as $r)
-                            <div class="event reunion" title="{{ $r->titre }}">
-                                📅 {{ $r->titre }}
+                            <div class="event reunion" title="{{ $r->titre }}" id="reunion-cal-{{ $r->id }}">
+                                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">📅 {{ $r->titre }}</span>
+                                <button class="btn-suppr-event" onclick="event.stopPropagation(); supprimerReunionCal({{ $r->id }})" title="Supprimer">×</button>
                             </div>
                         @endforeach
                     @endif
@@ -380,7 +385,7 @@
             </div>
     
             {{-- Formulaire Réunion --}}
-            <form id="form-reunion" action="{{ route('reunions.store') }}" method="POST">
+            <form id="form-reunion" action="{{ route('calendrier.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label>Titre *</label>
@@ -474,6 +479,19 @@
             });
             if (res.ok) {
                 document.getElementById('tache-cal-' + id).remove();
+            }
+        }
+
+        async function supprimerReunionCal(id) {
+            const res = await fetch('/reunion/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+            });
+            if (res.ok) {
+                document.getElementById('reunion-cal-' + id).remove();
             }
         }
 

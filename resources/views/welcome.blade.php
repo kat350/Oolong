@@ -434,22 +434,6 @@
 
     // Données injectées depuis HomeController
     const EVENTS = @json($evenements);
-    const REUNIONS_DATA = @json($reunions);
-
-    // Ajouter les réunions au calendrier
-    REUNIONS_DATA.forEach(reunion => {
-        if (reunion.heure_debut) {
-            const date = new Date(reunion.date_reunion);
-            const startHour = parseInt(reunion.heure_debut.split(':')[0]);
-            EVENTS.push({
-                dayOfWeek: date.getDay(),
-                hour: startHour,
-                label: reunion.titre,
-                type: 'reunion'
-            });
-        }
-    });
-
     const today  = new Date();
     const monday = new Date(today);
     const dow    = today.getDay();

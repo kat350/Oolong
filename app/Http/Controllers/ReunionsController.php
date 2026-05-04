@@ -41,6 +41,11 @@ class ReunionsController extends Controller
         }
 
         $reunion->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
+
         return redirect()->route('reunion')->with('success', 'Réunion supprimée.');
     }
 }

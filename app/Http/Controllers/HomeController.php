@@ -15,7 +15,8 @@ class HomeController extends Controller
         $userId = auth()->id();
 
         // Réunions du jour (max 3)
-        $reunions = Reunion::whereDate('date_reunion', $today)
+        $reunions = Reunion::where('user_id', $userId)
+            ->whereDate('date_reunion', $today)
             ->orderBy('heure_debut')
             ->take(3)
             ->get();
@@ -60,7 +61,19 @@ class HomeController extends Controller
                 ];
             });
 
-        $evenements = $eventsCalendrier->concat($eventsTaches);
+        $eventsReunions = Reunion::where('user_id', $userId)
+            ->whereBetween('date_reunion', [$debutSemaine, $finSemaine])
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'label'     => $r->titre,
+                    'dayOfWeek' => Carbon::parse($r->date_reunion)->dayOfWeek,
+                    'hour'      => $r->heure_debut ? (int) Carbon::parse($r->heure_debut)->format('H') : 9,
+                    'type'      => 'reunion',
+                ];
+            });
+
+        $evenements = $eventsCalendrier->concat($eventsTaches)->concat($eventsReunions);
 
         return view('welcome', compact('reunions', 'taches', 'evenements'));
     }

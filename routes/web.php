@@ -46,6 +46,6 @@ Route::middleware('auth')->group(function () {
 // Calendrier
 Route::middleware('auth')->group(function () {
     Route::get('/calendrier',  [CalendrierController::class, 'index'])->name('calendrier');
-    Route::post('/calendrier', [CalendrierController::class, 'store'])->name('calendrier.store');
+    Route::post('/calendrier', [CalendrierController::class, 'storeReunion'])->name('calendrier.store');
     Route::delete('/calendrier/{id}', [CalendrierController::class, 'destroy'])->name('calendrier.destroy');
 });
